@@ -1,5 +1,6 @@
 ﻿using Blog.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Blog.Controllers
@@ -27,6 +28,19 @@ namespace Blog.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+        [HttpGet]
+        public IActionResult Edit()
+        {
+
+            return View(new Blogs());
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Blogs blog)
+        {
+
+            return RedirectToAction("Index");
         }
     }
 }

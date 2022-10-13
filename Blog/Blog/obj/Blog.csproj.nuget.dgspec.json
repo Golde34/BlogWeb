@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\CodeDeveloper\\CSharp\\Realtime\\Blog\\Blog\\Blog.csproj": {}
+    "D:\\Github\\BlogWeb\\Blog\\Blog\\Blog.csproj": {}
   },
   "projects": {
-    "D:\\CodeDeveloper\\CSharp\\Realtime\\Blog\\Blog\\Blog.csproj": {
+    "D:\\Github\\BlogWeb\\Blog\\Blog\\Blog.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\CodeDeveloper\\CSharp\\Realtime\\Blog\\Blog\\Blog.csproj",
+        "projectUniqueName": "D:\\Github\\BlogWeb\\Blog\\Blog\\Blog.csproj",
         "projectName": "Blog",
-        "projectPath": "D:\\CodeDeveloper\\CSharp\\Realtime\\Blog\\Blog\\Blog.csproj",
+        "projectPath": "D:\\Github\\BlogWeb\\Blog\\Blog\\Blog.csproj",
         "packagesPath": "C:\\Users\\Dong Viet\\.nuget\\packages\\",
-        "outputPath": "D:\\CodeDeveloper\\CSharp\\Realtime\\Blog\\Blog\\obj\\",
+        "outputPath": "D:\\Github\\BlogWeb\\Blog\\Blog\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -44,6 +44,26 @@
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[6.0.10, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[6.0.10, )"
+            },
+            "Microsoft.Extensions.Configuration": {
+              "target": "Package",
+              "version": "[6.0.1, )"
+            },
+            "Microsoft.Extensions.Configuration.Json": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

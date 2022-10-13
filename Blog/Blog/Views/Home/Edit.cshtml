@@ -1,0 +1,26 @@
+﻿@model Blogs
+@{
+
+}
+
+<div>
+    <form asp-controller="Home" asp-action="Edit" method="post">
+        <div>
+            <label> Title</label>
+            <input asp-for="Title" />
+        </div>
+        <div>
+            <label> Sync url</label>
+            <input asp-for="Url" />
+        </div>
+        <div>
+            <label> Intro</label>
+            <input asp-for="Intro" />
+        </div>
+        <div>
+            <label> Body</label>
+            <input asp-for="Body" />
+        </div>
+        <input type="submit" value="submit"/>
+    </form>
+</div>
