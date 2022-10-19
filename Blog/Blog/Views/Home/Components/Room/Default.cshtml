@@ -1,0 +1,27 @@
+﻿@model IEnumerable<Chat>
+@using Blog.Models.Enums
+@using System.Security.Claims
+@{
+    var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+}
+@foreach (var chat in Model)
+{
+    <a class="room-button @((ViewBag.ChatId == chat.Id) ? "chat-active" : "inactive")" asp-controller="Chat" asp-action="Chat" asp-route-id="@chat.Id">
+        @if (chat.Name != null && chat.Type != ChatType.Private)
+        {
+            @chat.Name
+
+        }
+        else
+        {
+            <img src="/images/@chat.Users.FirstOrDefault(x => x.UserId != userId).User.Avatar" class="side-avatar" />
+            @chat.Users.FirstOrDefault(x => x.UserId != userId).User.Fullname
+        }
+    </a>
+}
+@if (ViewBag.ChatType != ChatType.Private)
+{
+    <a class="room-button" id="create-room-btn" href="">
+        <strong>+</strong>
+    </a>
+}

@@ -1,0 +1,540 @@
+﻿@model Chat
+@using Blog.Models.Enums
+@{
+    Layout = "Shared/_LayoutHome.cshtml";
+}
+@using System.Security.Claims
+@{
+    var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+}
+
+<link href="~/css/emojionearea.min.css" rel="stylesheet" />
+<link href="~/css/UserList.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+<div class="main">
+    <div style="display:none" id="currentLoggedDiv">@userId</div>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div id="partialDiv" class="side-menu">
+            @await Component.InvokeAsync("Room", new {chatType = Model.Type, chatId = Model.Id })
+        </div>
+        //<vc:room chat-type="@ViewBag.ChatType" chat-id="@ViewBag.ChatId"></vc:room>
+    }
+    @if (ViewBag.ChatType == ChatType.Room)
+    {
+        <div class="chat">
+            <div class="main-body">
+                <div class="col-9" style="margin: 0; padding: 0">
+                    <div class="row" style="background-color: #cb9bfb2b; padding: 10px;">
+                        <h5 id="joinedRoom" class="col-10">@Model.Name</h5>
+                        <button id="rename-room-btn" type="button" class="btn btn-link text-secondary px-1 col-1">
+                            <i class="fa fa-edit" style="font-size: 27px"></i>
+                        </button>
+                        <button id="leave-room-btn" type="button" class="btn btn-link text-secondary px-1 col-1">
+                            <i class="fa fa-sign-out" style="font-size: 27px"></i>
+                        </button>
+                    </div>
+                    <div class="chat-body">
+
+                        <ul class="list-unstyled" id="msg-list">
+                            @foreach (var message in Model.Messages)
+                            {
+                                if (message.MessageType == MessageType.Text)
+                                {
+
+                                    <li>
+                                        <div class="chat-message d-flex @(message.User.UserName.Equals(User.Identity.Name) ? "ismine" : "isother")">
+                                            <div class="left-side">
+                                                <img src="/images/@message.User.Avatar" class="message-avatar" />
+                                            </div>
+                                            <div class="message-content d-flex flex-column">
+                                                <div class="d-flex justify-content-between">
+                                                    <span class="author">@message.User.UserName</span>
+                                                    <span class="timestamp">
+                                                        <i class="far fa-clock"></i>
+                                                        <span>@message.Timestamp</span>
+                                                    </span>
+                                                </div>
+                                                <span class="content">@message.Text</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                }
+                                else if (message.MessageType == MessageType.Notification)
+                                {
+
+                                    <li>
+                                        <div class="noti-message" style="color: gray; text-align:center; font-size: 12px; margin: 10px;">@message.Text</div>
+                                    </li>
+                                }
+                                else if (message.MessageType == MessageType.Image)
+                                {
+                                    <li>
+                                        <div class="chat-message d-flex @(message.User.UserName.Equals(User.Identity.Name) ? "ismine" : "isother")">
+                                            <div class="left-side">
+                                                <img src="/images/@message.User.Avatar" class="message-avatar" />
+                                            </div>
+                                            <div class="message-content d-flex flex-column">
+                                                <div class="d-flex justify-content-between">
+                                                    <span class="author">@message.User.UserName</span>
+                                                    <span class="timestamp">
+                                                        <i class="far fa-clock"></i>
+                                                        <span>@message.Timestamp</span>
+                                                    </span>
+                                                </div>
+                                                <span class="content">
+                                                    <img style="max-width:340px" src="/images/@message.Text" />
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                }
+
+                            }
+                        </ul>
+                    </div>
+
+                    <form class="chat-input" asp-controller="Home" asp-action="CreateMessage" onsubmit="sendMessage()" id="chatform" enctype="multipart/form-data">
+                        <input type="hidden" name="chatId" value="@Model.Id" />
+                        <input type="hidden" id="currentUser" value="@User.Identity.Name" />
+                        <input type="hidden" name="roomId" value="@Model.Id" />
+                        <input type="text" name="message" id="message-input" />
+                        <label for="file-upload" class="custom-file-upload">
+                            <i class="fa fa-cloud-upload"></i>
+                        </label>
+                        <input id="file-upload" style="display:none;" type="file" name="image" accept="image/*" onchange="sendMessage()" />
+                        <button type="submit" class="btn btn-info btn-send">Send</button>
+                    </form>
+                </div>
+                <div class="col-3" style="border-left:1px solid black">
+                    <h3>Members</h3>
+                    <div id="plist" class="people-list">
+                        <ul id="peopleList" class="list-unstyled chat-list mt-2 mb-0">
+                            @foreach (var item in Model.Users)
+                            {
+                                @if (!item.UserId.Equals(userId))
+                                {
+                                    <li class="clearfix" onclick="window.location.href='@Url.Action("CreatePrivateRoom", "Home", new { userId = item.UserId})'">
+                                        <img src="/images/@item.User.Avatar">
+                                        <div class="about">
+                                            <div style="display:none;">@item.User.UserName</div>
+                                            <div class="name">@item.User.UserName</div>
+                                            <div class="status"> <i class="fa fa-circle offline"></i></div>
+                                        </div>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="clearfix">
+                                        <img src="/images/@item.User.Avatar">
+                                        <div class="about">
+                                            <div style="display:none;">@item.User.UserName</div>
+                                            <div class="name">@item.User.UserName</div>
+                                            <div class="status"> <i class="fa fa-circle online"></i></div>
+                                        </div>
+                                    </li>
+                                }
+
+                            }
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="chat">
+            <div class="chat-body">
+                <ul class="list-unstyled" id="msg-list">
+                    @foreach (var message in Model.Messages)
+                    {
+                        if (message.MessageType == MessageType.Text)
+                        {
+                            <li>
+                                <div class="chat-message d-flex @(message.User.UserName.Equals(User.Identity.Name) ? "ismine" : "isother")">
+                                    <div class="left-side">
+                                        <img src="/images/@message.User.Avatar" class="message-avatar" />
+                                    </div>
+                                    <div class="message-content d-flex flex-column">
+                                        <div class="d-flex justify-content-between">
+                                            <span class="author">@message.User.UserName</span>
+                                            <span class="timestamp">
+                                                <i class="far fa-clock"></i>
+                                                <span>@message.Timestamp</span>
+                                            </span>
+                                        </div>
+                                        <span class="content">@message.Text</span>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                        else if (message.MessageType == MessageType.Image)
+                        {
+                            <li>
+                                <div class="chat-message d-flex @(message.User.UserName.Equals(User.Identity.Name) ? "ismine" : "isother")">
+                                    <div class="left-side">
+                                        <img src="/images/@message.User.Avatar" class="message-avatar" />
+                                    </div>
+                                    <div class="message-content d-flex flex-column">
+                                        <div class="d-flex justify-content-between">
+                                            <span class="author">@message.User.UserName</span>
+                                            <span class="timestamp">
+                                                <i class="far fa-clock"></i>
+                                                <span>@message.Timestamp</span>
+                                            </span>
+                                        </div>
+                                        <span class="content">
+                                            <img style="max-width:400px" src="/images/@message.Text" />
+                                        </span>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                        @*<li>
+                <div class="noti-message">User has left the room</div>
+                </li>*@
+                    }
+                </ul>
+            </div>
+            <form class="chat-input" asp-controller="Home" asp-action="CreateMessage" onsubmit="sendMessage()" id="chatform" enctype="multipart/form-data">
+                <input type="hidden" name="chatId" value="@Model.Id" />
+                <input type="hidden" id="currentUser" value="@User.Identity.Name" />
+                <input type="hidden" name="roomId" value="@Model.Id" />
+                <input type="text" name="message" id="message-input" value=" " />
+                <label for="file-upload" class="custom-file-upload">
+                    <i class="fa fa-cloud-upload"></i>
+                </label>
+                <input id="file-upload" style="display:none;" type="file" name="image" accept="image/*" onchange="sendMessage()" />
+                <button type="submit" class="btn btn-info btn-send">Send</button>
+            </form>
+        </div>
+    }
+
+
+</div>
+
+<div class="modal" id="rename-room-modal">
+    <form asp-controller="Home" asp-action="Rename" class="modal-body" onsubmit="rename()">
+        <button type="button" class="close" onclick="closeRenameModal()">X</button>
+        <header>Rename Room</header>
+        <div>
+            <input name="roomId" value="@Model.Id" type="hidden">
+            <input name="chatId" value="@Model.Id" type="hidden">
+            <input name="newName" value="@Model.Name">
+        </div>
+        <footer>
+            <button onclick="closeRenameModal()">Rename</button>
+        </footer>
+    </form>
+</div>
+<div class="modal" id="leave-room-modal">
+    <form asp-controller="Chat" asp-action="LeaveRoom" asp-route-id="@Model.Id" class="modal-body" onsubmit="leaveRoom()">
+        <button type="button" class="close" onclick="closeLeaveModal()">X</button>
+        <header>Leave Room</header>
+        <div>
+            <p>Are you sure you want to leave this Chat Room?</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="closeLeaveModal()">Close</button>
+            <button class="btn btn-danger" onclick="closeLeaveModal()">Leave</button>
+        </div>
+    </form>
+</div>
+
+
+
+@section scripts{
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="~/microsoft-signalr/signalr.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="~/js/Chat.js"></script>
+
+    <script src="~/js/emojionearea.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var el = $("#message-input").emojioneArea({
+                pickerPosition: "top",
+                placeholder: "Type something here",
+                filtersPosition: "bottom",
+                inline: true,
+                events: {
+                    keyup: function (editor, event) {
+                        if (event.keyCode === 13) {
+                            console.log("13");
+                            //sendMessage();
+                        }
+                    }
+                }
+            });
+        })
+        var connection = new signalR.HubConnectionBuilder()
+            .withUrl("/chatHub")
+            .build();
+        var _connectionId = '';
+        connection.on("Rename", function (message, newName, chatId) {
+            var div = document.createElement("div");
+            div.appendChild(document.createTextNode(message));
+            div.style.color = "dimgrey";
+            div.style.textAlign = "center";
+            div.style.fontSize = "12px";
+            div.style.margin = "10px";
+            var li = document.createElement("li")
+            li.appendChild(div)
+            var list = document.getElementById("msg-list")
+            list.appendChild(li);
+            document.getElementById("joinedRoom").innerHTML = newName;
+            $(".chat-body").animate({ scrollTop: $(".chat-body")[0].scrollHeight }, 500);
+            refreshSide(chatId);
+
+        });
+        var refreshSide = function (id) {
+            $.ajax({
+                url: '@Url.Action("GetRoomViewComponent", "Home")',
+                data: { chatId: id },
+                success: function (data) {
+                    $("#partialDiv").html("");
+                    $("#partialDiv").html(data);
+                }
+            })
+        }
+        connection.on("UserLeft", function (data) {
+            console.log("user left notified");
+            var div = document.createElement("div");
+            div.appendChild(document.createTextNode(data));
+            div.style.color = "dimgrey";
+            div.style.textAlign = "center";
+            div.style.fontSize = "12px";
+            div.style.margin = "10px";
+            var li = document.createElement("li")
+            li.appendChild(div)
+            var list = document.getElementById("msg-list")
+            list.appendChild(li);
+            $(".chat-body").animate({ scrollTop: $(".chat-body")[0].scrollHeight }, 500);
+        });
+        connection.on("NewUserJoined", function (data) {
+            console.log("user joined notified");
+            var div = document.createElement("div");
+            div.appendChild(document.createTextNode(data));
+            div.style.color = "dimgrey";
+            div.style.textAlign = "center";
+            div.style.fontSize = "12px";
+            div.style.margin = "10px";
+            var li = document.createElement("li")
+            li.appendChild(div)
+            var list = document.getElementById("msg-list")
+            list.appendChild(li);
+            $(".chat-body").animate({ scrollTop: $(".chat-body")[0].scrollHeight }, 500);
+        });
+        connection.on("ReceiveMessage", function (data, sender, date) {
+            console.log("messagereceived!")
+            var currentUserName = document.getElementById("currentUser").value;
+            var div1 = document.createElement("div");
+            div1.classList.add("chat-message", "d-flex")
+            if (sender.userName == currentUserName) div1.classList.add("ismine");
+
+            var divImg = document.createElement("div");
+            divImg.classList.add("left-side");
+
+            var avaimg = document.createElement("img");
+            avaimg.src = "/images/" + sender.avatar;
+            avaimg.classList.add("message-avatar");
+            console.log("src: " + avaimg.src);
+            divImg.appendChild(avaimg);
+            div1.appendChild(divImg);
+
+            var div2 = document.createElement("div")
+            div2.classList.add("message-content", "d-flex", "flex-column")
+            var div3 = document.createElement("div")
+            div3.classList.add("d-flex", "justify-content-between")
+
+            var spanAuthor = document.createElement("span");
+            spanAuthor.classList.add("author")
+            spanAuthor.appendChild(document.createTextNode(sender.displayName))
+
+            var spanTimestamp = document.createElement("span");
+            spanTimestamp.classList.add("timestamp")
+            var timeIcon = document.createElement("i")
+            timeIcon.classList.add("far", "fa-clock")
+            var childSpan = document.createElement("span");
+            childSpan.appendChild(document.createTextNode(date))
+
+            spanTimestamp.appendChild(timeIcon);
+            spanTimestamp.appendChild(childSpan);
+
+            div3.appendChild(spanAuthor)
+            div3.appendChild(spanTimestamp)
+
+            div2.appendChild(div3);
+            if (data.messageType == 0) {
+                var spanContent = document.createElement("span");
+                spanContent.classList.add("content")
+                spanContent.appendChild(document.createTextNode(data.text))
+            } else if (data.messageType == 2) {
+                var spanContent = document.createElement("span");
+                spanContent.classList.add("content")
+                var img = document.createElement('img');
+                img.src = "/images/" + data.text;
+                img.style = "max-width: 400px";
+                spanContent.appendChild(img);
+            }
+
+
+            div2.appendChild(spanContent)
+
+            div1.appendChild(div2)
+            var li = document.createElement("li")
+            li.appendChild(div1)
+            var list = document.getElementById("msg-list")
+            list.appendChild(li)
+            $(".chat-body").animate({ scrollTop: $(".chat-body")[0].scrollHeight }, 500);
+        })
+
+        var joinRoom = function () {
+            var url = '/Chat/JoinRoom/' + _connectionId + '/@Model.Id';
+            axios.post(url, null)
+                .then(res => {
+                    console.log("Room Joined!", res);
+                })
+                .catch(err => {
+                    console.error("Failed to join room!", err);
+                })
+        }
+        var leaveRoom = function () {
+            var url = '/Chat/LeaveRoom/' + _connectionId + '/@Model.Id';
+            axios.post(url, null)
+                .then(res => {
+                    console.log("Room Left!", res);
+                })
+                .catch(err => {
+                    console.error("Failed to leave room!", err);
+                })
+        }
+        connection.start()
+            .then(function () {
+                connection.invoke("getConnectionId")
+                    .then(function (connectionId) {
+                        _connectionId = connectionId
+                        joinRoom();
+                        $(".chat-body").animate({ scrollTop: $(".chat-body")[0].scrollHeight }, 100);
+                    })
+            })
+            .catch(function (err) {
+                console.log(err)
+            })
+
+        var form = null;
+        function sendMessage() {
+            event.preventDefault();
+            var data = new FormData(document.getElementById("chatform"));
+            $(".emojionearea-editor").html('');
+            axios.post('/Chat/SendMessage/', data)
+                .then(res => {
+                    console.log("Message Sent!")
+                })
+                .catch(err => {
+                    console.log("Failed to send message")
+                })
+            $('#chatform').trigger('reset');
+            //event.preventDefault();
+        }
+        function rename() {
+            event.preventDefault();
+            var data = new FormData(event.target);
+            $(".emojionearea-editor").html('');
+            axios.post('/Chat/Rename/', data)
+                .then(res => {
+                    console.log("Message Sent!")
+                })
+                .catch(err => {
+                    console.log("Failed to send message")
+                })
+            //event.preventDefault();
+        }
+
+        connection.on("UserJoined", function (connectedUsers) {
+            var usersJson = JSON.parse(connectedUsers);
+            //alert(usersJson);
+            $('#peopleList').children('li').each(function () {
+                var mainDiv = this.getElementsByTagName('div')[0];
+                var statusDiv = mainDiv.getElementsByTagName('div')[2];
+                var userName = mainDiv.getElementsByTagName('div')[0].innerHTML;
+                console.log(userName);
+                while (statusDiv.firstChild) {
+                    statusDiv.removeChild(statusDiv.lastChild);
+                }
+                if (usersJson.includes(userName)) {
+                    var newStatus = document.createElement('i');
+                    newStatus.className = "fa fa-circle online";
+                    statusDiv.appendChild(newStatus);
+                } else {
+                    var newStatus = document.createElement('i');
+                    newStatus.className = "fa fa-circle offline";
+                    statusDiv.appendChild(newStatus);
+                }
+
+            });
+        });
+
+        connection.on("UserAdded", function (userJson) {
+            var userAdded = JSON.parse(userJson);
+            var peopleList = document.getElementById("peopleList");
+            $('#peopleList').children('li').each(function () {
+                var mainDiv = this.getElementsByTagName('div')[0];
+                var userName = mainDiv.getElementsByTagName('div')[0].innerHTML;
+                if (userName.localeCompare(userAdded.UserName) == 0) {
+                    this.remove();
+                }
+            });
+            var clearFix = document.createElement('li');
+            clearFix.className = "clearfix";
+            if (userAdded.Id != document.getElementById("currentLoggedDiv").innerHTML) {
+                clearFix.onclick = function () {
+                    window.location.href = '/Home/CreatePrivateRoom?userId=' + userAdded.Id;
+                }
+            }
+
+            var img = document.createElement('img');
+            img.src = "/images/" + userAdded.Avatar;
+            clearFix.appendChild(img);
+            var about = document.createElement('div');
+            about.className = "about";
+            var userName = document.createElement('div');
+            userName.style = "display: none";
+            userName.innerHTML = userAdded.UserName;
+            about.appendChild(userName);
+            var displayName = document.createElement('div');
+            displayName.className = "name";
+            displayName.innerHTML = userAdded.DisplayName;
+            about.appendChild(displayName);
+            var status = document.createElement('div');
+            status.className = "status";
+            var statusIcon = document.createElement('i');
+            statusIcon.className = "fa fa-circle online";
+            status.appendChild(statusIcon);
+            about.appendChild(status);
+            clearFix.appendChild(about);
+            peopleList.prepend(clearFix);
+        });
+
+        connection.on("UserRemoved", function (userJson) {
+            var userAdded = JSON.parse(userJson);
+            var peopleList = document.getElementById("peopleList");
+            $('#peopleList').children('li').each(function () {
+                var mainDiv = this.getElementsByTagName('div')[0];
+                var userName = mainDiv.getElementsByTagName('div')[0].innerHTML;
+                if (userName.localeCompare(userAdded.UserName) == 0) {
+                    this.remove();
+                }
+            });
+        });
+
+        function submitMessage() {
+            var preview = document.getElementById('message-input');
+            preview.innerHTML = "";
+            $('#chatform').submit();
+        }
+    </script>
+}

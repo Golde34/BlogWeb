@@ -44,7 +44,7 @@ namespace Blog.Controllers
                 User user = new User
                 {
                     Fullname = registerDTO.FullName,
-                    UserName = registerDTO.Email,
+                    UserName = registerDTO.UserName,
                     Email = registerDTO.Email,
                     PhoneNumber = registerDTO.PhoneNumber,
                     Profession = registerDTO.Profession,

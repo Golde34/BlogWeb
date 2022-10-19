@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Blog.Models;
+using Blog.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,4 +47,8 @@ app.UseEndpoints(endpoints =>
         pattern: "{controller=Account}/{action=Login}");
 });
 app.UseMvcWithDefaultRoute();
+app.UseEndpoints(routes =>
+{
+    routes.MapHub<ChatHub>("/chatHub");
+});
 app.Run();

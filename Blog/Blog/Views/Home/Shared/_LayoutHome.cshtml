@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ChatProject</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/home.css" />
+    <link rel="stylesheet" href="~/css/content.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+</head>
+<body>
+    <div class="navbar">
+        <a asp-controller="Home" asp-action="Index">Home</a>
+        @*<a asp-controller="Home" asp-action="Find">Find</a>*@
+        <a asp-controller="Home" asp-action="Private">Private</a>
+        <span style="color: #fff;font-size: 18px; padding-top: 0.8rem;">Hello, @ViewData["currentUser"]</span>
+        <a asp-controller="Account" asp-action="Logout">Logout</a>
+    </div>
+    @RenderBody()
+
+    @*<div class="main">
+    @if (User.Identity.IsAuthenticated)
+    {
+    <vc:room></vc:room>
+    }
+    <div class="chat">
+    @RenderBody()
+    </div>
+    </div>*@
+    <div class="modal" id="create-room-modal">
+        <form asp-controller="Home" asp-action="CreateRoom" class="modal-body">
+            <button type="button" class="close" onclick="closeModal()">X</button>
+            <header>Create Room</header>
+            <div>
+                <input name="name">
+            </div>
+            <footer>
+                <button onclick="closeModal()">Create</button>
+            </footer>
+        </form>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/home.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
