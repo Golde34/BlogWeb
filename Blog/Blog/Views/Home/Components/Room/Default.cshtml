@@ -6,7 +6,7 @@
 }
 @foreach (var chat in Model)
 {
-    <a class="room-button @((ViewBag.ChatId == chat.Id) ? "chat-active" : "inactive")" asp-controller="Chat" asp-action="Chat" asp-route-id="@chat.Id">
+    <a class="room-button @((ViewBag.ChatId == chat.Id) ? "chat-active" : "inactive")" asp-controller="Home" asp-action="Chat" asp-route-id="@chat.Id">
         @if (chat.Name != null && chat.Type != ChatType.Private)
         {
             @chat.Name
@@ -15,7 +15,7 @@
         else
         {
             <img src="/images/@chat.Users.FirstOrDefault(x => x.UserId != userId).User.Avatar" class="side-avatar" />
-            @chat.Users.FirstOrDefault(x => x.UserId != userId).User.Fullname
+            @chat.Users.FirstOrDefault(x => x.UserId != userId).User.UserName
         }
     </a>
 }
