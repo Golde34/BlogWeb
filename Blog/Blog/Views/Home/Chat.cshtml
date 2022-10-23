@@ -107,7 +107,7 @@
                     </form>
                 </div>
                 <div class="col-3" style="border-left:1px solid black">
-                    <h3>Members</h3>
+                    <h3 style="margin-left: 50px;">Members</h3>
                     <div id="plist" class="people-list">
                         <ul id="peopleList" class="list-unstyled chat-list mt-2 mb-0">
                             @foreach (var item in Model.Users)
@@ -475,7 +475,8 @@
                 var userName = mainDiv.getElementsByTagName('div')[0].innerHTML;
                 if (userName.localeCompare(userAdded.UserName) == 0) {
                     this.remove();
-              });
+                }
+            });
             var clearFix = document.createElement('li');
             clearFix.className = "clearfix";
             if (userAdded.Id != document.getElementById("currentLoggedDiv").innerHTML) {
@@ -495,7 +496,7 @@
             about.appendChild(userName);
             var displayName = document.createElement('div');
             displayName.className = "name";
-            displayName.innerHTML = userAdded.DisplayName;
+            displayName.innerHTML = userAdded.UserName;
             about.appendChild(displayName);
             var status = document.createElement('div');
             status.className = "status";

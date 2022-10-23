@@ -111,7 +111,7 @@ namespace Blog.Controllers
             var user = await _userManager.FindByIdAsync(userId);
             if (image != null)
             {
-                string uniqueFileName = null;
+                string uniqueFileName;
                 string uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "images");
                 uniqueFileName = Guid.NewGuid().ToString() + "_" + image.FileName;
                 using (var fs = new FileStream(Path.Combine(uploadsFolder, uniqueFileName), FileMode.Create))
@@ -176,7 +176,7 @@ namespace Blog.Controllers
             _dbContext.Messages.Add(msg);
             await _dbContext.SaveChangesAsync();
             await _hubContext.Clients.Groups(roomId)
-                .SendAsync("Rename", msg, newName, chatId);
+                .SendAsync("Rename", msg.Text, newName, chatId);
             return Ok();
         }
     }
