@@ -107,7 +107,7 @@
                     </form>
                 </div>
                 <div class="col-3" style="border-left:1px solid black">
-                    <h3 style="margin-left: 50px;">Members</h3>
+                    <h3 style="margin-left: 20px;">Members</h3>
                     <div id="plist" class="people-list">
                         <ul id="peopleList" class="list-unstyled chat-list mt-2 mb-0">
                             @foreach (var item in Model.Users)
@@ -342,7 +342,7 @@
 
             var spanAuthor = document.createElement("span");
             spanAuthor.classList.add("author")
-            spanAuthor.appendChild(document.createTextNode(sender.displayName))
+            spanAuthor.appendChild(document.createTextNode(sender.userName))
 
             var spanTimestamp = document.createElement("span");
             spanTimestamp.classList.add("timestamp")
