@@ -216,7 +216,7 @@
 </div>
 
 <div class="modal" id="rename-room-modal">
-    <form asp-controller="Home" asp-action="Rename" class="modal-body" onsubmit="rename()">
+    <form asp-controller="Chat" asp-action="Rename" class="modal-body" onsubmit="rename()">
         <button type="button" class="close" onclick="closeRenameModal()">X</button>
         <header>Rename Room</header>
         <div>
@@ -247,16 +247,19 @@
 
 @section scripts{
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <script src="~/microsoft-signalr/signalr.min.js"></script>
+    <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="~/js/Chat.js"></script>
 
     <script>
+        //connection
         var connection = new signalR.HubConnectionBuilder()
             .withUrl("/chatHub")
             .build();
+        console.log('connection: ' + connection);
+
         var _connectionId = '';
-        
+
         connection.on("Rename", function (message, newName, chatId) {
             var div = document.createElement("div");
             div.appendChild(document.createTextNode(message));
@@ -273,6 +276,7 @@
             refreshSide(chatId);
 
         });
+
         var refreshSide = function (id) {
             $.ajax({
                 url: '@Url.Action("GetRoomViewComponent", "Home")',
@@ -283,6 +287,7 @@
                 }
             })
         }
+
         connection.on("UserLeft", function (data) {
             console.log("user left notified");
             var div = document.createElement("div");
@@ -297,6 +302,7 @@
             list.appendChild(li);
             $(".chat-body").animate({ scrollTop: $(".chat-body")[0].scrollHeight }, 500);
         });
+
         connection.on("NewUserJoined", function (data) {
             console.log("user joined notified");
             var div = document.createElement("div");
@@ -311,6 +317,7 @@
             list.appendChild(li);
             $(".chat-body").animate({ scrollTop: $(".chat-body")[0].scrollHeight }, 500);
         });
+
         connection.on("ReceiveMessage", function (data, sender, date) {
             console.log("messagereceived!")
             var currentUserName = document.getElementById("currentUser").value;
@@ -364,7 +371,6 @@
                 spanContent.appendChild(img);
             }
 
-
             div2.appendChild(spanContent)
 
             div1.appendChild(div2)
@@ -401,6 +407,7 @@
                     .then(function (connectionId) {
                         _connectionId = connectionId
                         joinRoom();
+                        console.log('---------');
                         $(".chat-body").animate({ scrollTop: $(".chat-body")[0].scrollHeight }, 100);
                     })
             })
@@ -412,10 +419,9 @@
         function sendMessage() {
             event.preventDefault();
             var data = new FormData(document.getElementById("chatform"));
-            $(".emojionearea-editor").html('');
             axios.post('/Chat/SendMessage/', data)
                 .then(res => {
-                    console.log("Message Sent!")
+                    console.log("Message Sent!");
                 })
                 .catch(err => {
                     console.log("Failed to send message")
@@ -423,10 +429,10 @@
             $('#chatform').trigger('reset');
             //event.preventDefault();
         }
+
         function rename() {
             event.preventDefault();
             var data = new FormData(event.target);
-            $(".emojionearea-editor").html('');
             axios.post('/Chat/Rename/', data)
                 .then(res => {
                     console.log("Message Sent!")
@@ -469,8 +475,7 @@
                 var userName = mainDiv.getElementsByTagName('div')[0].innerHTML;
                 if (userName.localeCompare(userAdded.UserName) == 0) {
                     this.remove();
-                }
-            });
+              });
             var clearFix = document.createElement('li');
             clearFix.className = "clearfix";
             if (userAdded.Id != document.getElementById("currentLoggedDiv").innerHTML) {

@@ -6,12 +6,10 @@ namespace Blog.Hubs
 {
     public class ChatHub : Hub
     {
-
         public string GetConnectionId()
         {
             return Context.ConnectionId;
         }
-
         public override async Task OnConnectedAsync()
         {
             if (!ConnectedUser.IdList.Contains(Context.User.Identity.Name))

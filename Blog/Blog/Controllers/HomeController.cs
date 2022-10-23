@@ -90,7 +90,7 @@ namespace Blog.Controllers
                 return RedirectToAction("Chat", new {id = chatId});
             } else
             {
-                string uniqueFileName = null;
+                string uniqueFileName;
                 string uploadFolder = Path.Combine(hostingEnvironment.WebRootPath, "images");
                 uniqueFileName = Guid.NewGuid().ToString() + "_" + image.FileName;
                 using (var fs = new FileStream(Path.Combine(uploadFolder, uniqueFileName), FileMode.Create))

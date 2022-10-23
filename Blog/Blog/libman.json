@@ -5,6 +5,14 @@
     {
       "library": "microsoft-signalr@6.0.10",
       "destination": "wwwroot/microsoft-signalr/"
+    },
+    {
+      "library": "signalr.js@2.4.3",
+      "destination": "wwwroot/js/dist/browser/signalr.js/",
+      "files": [
+        "jquery.signalR.min.js",
+        "jquery.signalR.js"
+      ]
     }
   ]
 }

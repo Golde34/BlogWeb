@@ -58,15 +58,16 @@ namespace Blog.Controllers
             var msg = new Message
             {
                 ChatID = id,
-                Text = user.UserName + "has joined the group",
+                Text = user.UserName + " has joined the group.",
+                UserID = userId,
                 Timestamp = DateTime.Now,
                 MessageType = MessageType.Notification
             };
             await _dbContext.SaveChangesAsync();
             await _hubContext.Clients.Groups(id.ToString()).SendAsync("NewUserJoined", msg.Text);
             return RedirectToAction("Chat", "Home", new { id = id });
-
         }
+
         [HttpPost("[action]/{connectionId}/{roomId}")]
         public async Task<IActionResult> LeaveRoom(string connectionId, string roomId, [FromServices] UserManager<User> _userManager)
         {
@@ -89,6 +90,7 @@ namespace Blog.Controllers
             {
                 ChatID = id,
                 Text = user.UserName + " has left the group.",
+                UserID = userId,
                 Timestamp = DateTime.Now,
                 MessageType = MessageType.Notification
             };
@@ -99,10 +101,9 @@ namespace Blog.Controllers
             await _hubContext.Clients.Groups(id.ToString()).SendAsync("UserLeft", msg.Text);
             return RedirectToAction("Index", "Home");
         }
+
         [HttpPost("[action]")]
-        public async Task<IActionResult> SendMessage(
-            string message,
-            int chatId,
+        public async Task<IActionResult> SendMessage(string message, int chatId,
             string roomId, IFormFile image, [FromServices] IHostingEnvironment hostingEnvironment,
             [FromServices] UserManager<User> _userManager)
         {
@@ -152,9 +153,6 @@ namespace Blog.Controllers
                 await _hubContext.Clients.Groups(roomId)
                     .SendAsync("ReceiveMessage", msg, user, date);
             }
-
-
-
             return Ok();
         }
 
@@ -170,6 +168,7 @@ namespace Blog.Controllers
             {
                 ChatID = chatId,
                 Text = user.UserName + " named the group " + newName + ".",
+                UserID = userId,
                 Timestamp = DateTime.Now,
                 MessageType = MessageType.Notification
             };
@@ -177,7 +176,7 @@ namespace Blog.Controllers
             _dbContext.Messages.Add(msg);
             await _dbContext.SaveChangesAsync();
             await _hubContext.Clients.Groups(roomId)
-                .SendAsync("Rename", msg.Text, newName, chatId);
+                .SendAsync("Rename", msg, newName, chatId);
             return Ok();
         }
     }
