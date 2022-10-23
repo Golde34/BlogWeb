@@ -1,4 +1,4 @@
-﻿@import "_content.scss";
+﻿@import "content.scss";
 
 body {
     margin: 0;
@@ -41,7 +41,7 @@ body {
 }
 
 .side-menu {
-    background-color: #d4b2fa;
+    background: linear-gradient(#e66465, #9198e5);
     min-width: 200px;
     z-index: 50;
     box-shadow: 1px 0 2px 0 #a763f1;
@@ -50,7 +50,7 @@ body {
 }
 
 .room-button {
-    border: 1px solid #aa22f2;
+    border: 1px solid #e66465;
     color: white;
     text-decoration: none;
     display: flex;
@@ -59,8 +59,8 @@ body {
     margin: 0.75rem 1rem 0;
     height: 50px;
     border-radius: 5px;
-    box-shadow: 0 1px 3px 1px #a763f1;
-    background-color: #be73fe;
+    box-shadow: 0 1px 5px 1px #9d91d3;
+    background-color: #9197e4;
     text-align: center;
     max-width: 200px;
     padding: 10px;
@@ -72,7 +72,7 @@ body {
     }
 
     .room-button:hover {
-        box-shadow: 0 2px 3px 1px #a763f1;
+        box-shadow: 0 2px 3px 1px #e66467;
     }
 
     .room-button > image {

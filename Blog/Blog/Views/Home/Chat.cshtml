@@ -8,7 +8,6 @@
     var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 }
 
-<link href="~/css/emojionearea.min.css" rel="stylesheet" />
 <link href="~/css/UserList.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 
@@ -252,28 +251,12 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="~/js/Chat.js"></script>
 
-    <script src="~/js/emojionearea.min.js"></script>
     <script>
-        $(document).ready(function () {
-            var el = $("#message-input").emojioneArea({
-                pickerPosition: "top",
-                placeholder: "Type something here",
-                filtersPosition: "bottom",
-                inline: true,
-                events: {
-                    keyup: function (editor, event) {
-                        if (event.keyCode === 13) {
-                            console.log("13");
-                            //sendMessage();
-                        }
-                    }
-                }
-            });
-        })
         var connection = new signalR.HubConnectionBuilder()
             .withUrl("/chatHub")
             .build();
         var _connectionId = '';
+        
         connection.on("Rename", function (message, newName, chatId) {
             var div = document.createElement("div");
             div.appendChild(document.createTextNode(message));

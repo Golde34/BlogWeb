@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "fekkcyDpjgMaoXyffNGWVkQfDKb8FTrNZ1JS80tN8d8=",
+  "Hash": "fFIrVRWPIbt9bFJMwy5cj8x5XLb07TsOjVvIz4Xswnw=",
   "Source": "Blog",
   "BasePath": "_content/Blog",
   "Mode": "Default",
@@ -270,6 +270,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\998d39df-a55b-4424-9f64-cfc2b5dba2bf_Untitled.png"
+    },
+    {
+      "Identity": "D:\\Github\\BlogWeb\\Blog\\Blog\\wwwroot\\images\\c1ff6b36-e7f6-4546-aef5-73ff7079001a_b97359439d117936ad4c92dbb4cfb7c9.jpg",
+      "SourceId": "Blog",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Github\\BlogWeb\\Blog\\Blog\\wwwroot\\",
+      "BasePath": "_content/Blog",
+      "RelativePath": "images/c1ff6b36-e7f6-4546-aef5-73ff7079001a_b97359439d117936ad4c92dbb4cfb7c9.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\c1ff6b36-e7f6-4546-aef5-73ff7079001a_b97359439d117936ad4c92dbb4cfb7c9.jpg"
     },
     {
       "Identity": "D:\\Github\\BlogWeb\\Blog\\Blog\\wwwroot\\images\\caa09c5d-fbfe-4870-99ed-973d59d3ccea_Ngày mới __.jpg",
