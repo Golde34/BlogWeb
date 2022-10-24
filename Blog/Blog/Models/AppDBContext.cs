@@ -5,6 +5,10 @@ namespace Blog.Models
 {
     public class AppDBContext : IdentityDbContext
     {
+        public AppDBContext()
+        {
+        }
+
         public AppDBContext(DbContextOptions<AppDBContext> options) : base(options)
         {
 
@@ -20,6 +24,19 @@ namespace Blog.Models
 
             builder.Entity<ChatUser>()
                 .HasKey(x => new {x.ChatId, x.UserId});
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                IConfigurationRoot configuration = new ConfigurationBuilder()
+                   .SetBasePath(Directory.GetCurrentDirectory())
+                   .AddJsonFile("appsettings.json")
+                   .Build();
+                var connectionString = configuration.GetConnectionString("DBString");
+                optionsBuilder.UseSqlServer(connectionString);
+            }
         }
     }
 }

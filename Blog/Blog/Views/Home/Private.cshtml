@@ -30,8 +30,6 @@
                 @foreach (var chat in Model)
                 {
                     <a class="room-button" asp-controller="Home" asp-action="CreatePrivateRoom" asp-route-userId="@chat.Id">
-
-                        @*@chat.Users.FirstOrDefault(x => x.UserId != userId).User.DisplayName*@
                         @chat.UserName
                     </a>
                 }
@@ -70,7 +68,7 @@
                 for (var x = 0; x < data.length; x++) {
                     var curId = data[x].id;
                     var user = document.createElement("a");
-                    user.innerHTML = data[x].displayName;
+                    user.innerHTML = data[x].userName;
                     user.className = "room-button";
                     user.href = "/Home/CreatePrivateRoom?userId=" + curId;
     @*user.onclick = function () {
