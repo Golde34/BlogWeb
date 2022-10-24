@@ -6,6 +6,8 @@ using System.Diagnostics;
 using Blog.Models.Enums;
 using System.Security.Claims;
 using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
+using Blog.Repository;
+using Blog.Repository.@interface;
 
 namespace Blog.Controllers
 {
@@ -13,6 +15,9 @@ namespace Blog.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private AppDBContext _dbContext;
+        private IUserRepo _userRepo = new UserRepository();
+        private IChatRepo _chatRepo = new ChatRepository();
+        private IMessageRepo _messageRepo = new MessageRepository();
 
         public HomeController(ILogger<HomeController> logger, AppDBContext dBContext)
         {
@@ -22,11 +27,13 @@ namespace Blog.Controllers
 
         public IActionResult Index()
         {
-            var chats = _dbContext.Chats.Include(o => o.Users).ThenInclude(o => o.User)
-                .Where(o => o.Type == ChatType.Room)
-                .ToList();
+            var chats = _chatRepo.GetChats();
+            //var chats = _dbContext.Chats.Include(o => o.Users).ThenInclude(o => o.User)
+            //    .Where(o => o.Type == ChatType.Room)
+            //    .ToList();
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            ViewData["currentUser"] = _dbContext.Users.FirstOrDefault(o => o.Id == userId).UserName;
+            ViewData["currentUser"] = _userRepo.GetCurrentUser(userId);
+            //ViewData["currentUser"] = _dbContext.Users.FirstOrDefault(o => o.Id == userId).UserName;
             return View(chats);
         }
 
@@ -47,6 +54,7 @@ namespace Blog.Controllers
             {
                 UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)
             });
+            //_chatRepo.AddChat(chat);
             _dbContext.Chats.Add(chat);
             await _dbContext.SaveChangesAsync();
             return RedirectToAction("Index");
@@ -57,11 +65,13 @@ namespace Blog.Controllers
         {
             Chat chat = _dbContext.Chats.Include(o => o.Users).Include(o => o.Messages).ThenInclude(o => o.User)
                 .FirstOrDefault(o => o.Id == id);
+
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            ViewData["currentUser"] = _dbContext.Users.FirstOrDefault(o => o.Id == userId).UserName;
+            ViewData["currentUser"] = _userRepo.GetCurrentUser(userId);
+            //ViewData["currentUser"] = _dbContext.Users.FirstOrDefault(o => o.Id == userId).UserName;
             if (chat != null)
             {
-                if (chat.Users.Any(o => o.UserId == User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                if (chat.Users.Any(o => o.UserId == userId))
                 {
                     ViewBag.ChatType = chat.Type;
                     ViewBag.ChatId = chat.Id;
@@ -85,8 +95,9 @@ namespace Blog.Controllers
                     Timestamp = DateTime.Now,
                     MessageType = MessageType.Text,
                 };
-                _dbContext.Add(msg);
-                await _dbContext.SaveChangesAsync();
+                _messageRepo.AddMessage(msg);
+                //_dbContext.Add(msg);
+                //await _dbContext.SaveChangesAsync();
                 return RedirectToAction("Chat", new {id = chatId});
             } else
             {
@@ -105,29 +116,36 @@ namespace Blog.Controllers
                     Timestamp = DateTime.Now,
                     MessageType = MessageType.Image,
                 };
-                _dbContext.Add(msg);
+                _messageRepo.AddMessage(msg);
+                //_dbContext.Add(msg);
+                //await _dbContext.SaveChangesAsync();
                 return RedirectToAction("Chat", new { id = chatId });
             }
         }
 
         public IActionResult Find()
         {
-            var users = _dbContext.Users.Where(o => o.Id != User.FindFirst(ClaimTypes.NameIdentifier).Value).ToList();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var users = _userRepo.GetUsersbutNoCurrentUser(userId);
+            //var users = _dbContext.Users.Where(o => o.Id != userId).ToList();
             return View(users);
         }
 
         public IActionResult FindUserByName(string search)
         {
-            var users = _dbContext.Users
-                        .Where(o => o.Id != User.FindFirst(ClaimTypes.NameIdentifier).Value)
-                        .Where(o => o.UserName.Contains(search) || o.Email.Contains(search))
-                        .ToList();
+            var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var users = _userRepo.GetUserBySearchString(search, userId);
+            //var users = _dbContext.Users
+            //            .Where(o => o.Id != User.FindFirst(ClaimTypes.NameIdentifier).Value)
+            //            .Where(o => o.UserName.Contains(search) || o.Email.Contains(search))
+            //            .ToList();
             return Json(users);
         }
 
         public IActionResult FindRoomByName(string search)
         {
-            var rooms = _dbContext.Chats.Where(o => o.Type == ChatType.Room && o.Name.Contains(search)).ToList();
+            var rooms = _chatRepo.FindRoomByName(search);
+            //var rooms = _dbContext.Chats.Where(o => o.Type == ChatType.Room && o.Name.Contains(search)).ToList();
             return Json(rooms);
         }
 
@@ -164,9 +182,11 @@ namespace Blog.Controllers
 
         public IActionResult Private()
         {
-            var chats = _dbContext.Users.Where(x => x.Id != User.FindFirst(ClaimTypes.NameIdentifier).Value).ToList();
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            ViewData["currentUser"] = _dbContext.Users.FirstOrDefault(o => o.Id == userId).UserName;
+            var chats = _userRepo.GetUsersbutNoCurrentUser(userId);
+            //var chats = _dbContext.Users.Where(x => x.Id != User.FindFirst(ClaimTypes.NameIdentifier).Value).ToList();
+            ViewData["currentUser"] = _userRepo.GetCurrentUser(userId).UserName;
+            //ViewData["currentUser"] = _dbContext.Users.FirstOrDefault(o => o.Id == userId).UserName;
             return View(chats);
         }
 
