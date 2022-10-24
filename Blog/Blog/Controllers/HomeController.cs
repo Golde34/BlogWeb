@@ -63,16 +63,15 @@ namespace Blog.Controllers
         [HttpGet("{id}")]
         public IActionResult Chat(int id)
         {
-            Chat chat = _chatRepo.GetSingleChat(id);
-            //Chat chat = _dbContext.Chats.Include(o => o.Users).Include(o => o.Messages).ThenInclude(o => o.User)
-            //    .FirstOrDefault(o => o.Id == id);
+            Chat chat = _dbContext.Chats.Include(o => o.Users).Include(o => o.Messages).ThenInclude(o => o.User)
+                .FirstOrDefault(o => o.Id == id);
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             ViewData["currentUser"] = _userRepo.GetCurrentUser(userId);
             //ViewData["currentUser"] = _dbContext.Users.FirstOrDefault(o => o.Id == userId).UserName;
             if (chat != null)
             {
-                if (chat.Users.Any(o => o.UserId == User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                if (chat.Users.Any(o => o.UserId == userId))
                 {
                     ViewBag.ChatType = chat.Type;
                     ViewBag.ChatId = chat.Id;
@@ -117,14 +116,18 @@ namespace Blog.Controllers
                     Timestamp = DateTime.Now,
                     MessageType = MessageType.Image,
                 };
-                _dbContext.Add(msg);
+                _messageRepo.AddMessage(msg);
+                //_dbContext.Add(msg);
+                //await _dbContext.SaveChangesAsync();
                 return RedirectToAction("Chat", new { id = chatId });
             }
         }
 
         public IActionResult Find()
         {
-            var users = _dbContext.Users.Where(o => o.Id != User.FindFirst(ClaimTypes.NameIdentifier).Value).ToList();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var users = _userRepo.GetUsersbutNoCurrentUser(userId);
+            //var users = _dbContext.Users.Where(o => o.Id != userId).ToList();
             return View(users);
         }
 
