@@ -1,17 +1,22 @@
-﻿using Microsoft.Build.Framework;
+﻿using Blog.Models;
+using Microsoft.Build.Framework;
 
-namespace Blog.Models
+namespace Blog.ViewDTO
 {
-    public class Blogs
+    public class BlogDTO
     {
-        public int Id { get; set; }
+        [Required]
         public int GenreId { get; set; }
+        [Required]
         public string Title { get; set; }
+        [Required]
         public string Url { get; set; }
+        [Required]
         public string Image { get; set; }
+        [Required]
         public string Intro { get; set; }
+        [Required]
         public string Body { get; set; }
-        public DateTime Created { get; set; } = DateTime.Now;
         public string UserId { get; set; }
         public User User { get; set; }
     }
