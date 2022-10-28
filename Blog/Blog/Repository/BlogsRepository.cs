@@ -15,7 +15,7 @@ namespace Blog.Repository
 
         public Blogs GetBlogById(int? id) => BlogsManagement.Instance.GetBlogsByID(id);
 
-        public IEnumerable<Blogs> GetBlogs() => BlogsManagement.Instance.GetBlogsList();
+        public IEnumerable<Blogs> GetBlogs(string userId) => BlogsManagement.Instance.GetBlogsList(userId);
 
         public void UpdateBlogs(Blogs Blogs)
         {

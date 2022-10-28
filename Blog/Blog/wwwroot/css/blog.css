@@ -1,0 +1,155 @@
+﻿.profile-head {
+    transform: translateY(5rem)
+}
+
+body {
+    background: #654ea3;
+    background: linear-gradient(to right, #e96443, #904e95);
+    min-height: 100vh;
+    overflow-x: hidden;
+    font: 600 'Open Sans',sans-serif;
+}
+
+.profilepic {
+    position: relative;
+    overflow: hidden;
+}
+
+    .profilepic:hover .profilepic__content {
+        opacity: 1;
+    }
+
+    .profilepic:hover .profilepic__image {
+        opacity: .5;
+    }
+
+.profilepic__image {
+    object-fit: cover;
+    opacity: 1;
+    transition: opacity .2s ease-in-out;
+}
+
+.profilepic__content {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    opacity: 0;
+    transition: opacity .2s ease-in-out;
+}
+
+.profilepic__icon {
+    color: white;
+    padding-bottom: 8px;
+}
+
+.fas {
+    font-size: 20px;
+}
+
+.profilepic__text {
+    text-transform: uppercase;
+    font-size: 12px;
+    width: 50%;
+    text-align: center;
+    color: white;
+}
+
+.icon-background {
+    position: relative;
+    left: 96%;
+    bottom: 20%;
+}
+
+.left-component {
+    border: 1px solid #D5DBDB;
+    background-color: #F5F5F5;
+    box-shadow: 1px 2px 5px grey;
+}
+
+.right-component {
+    border: 1px solid #D5DBDB;
+    box-shadow: 1px 2px 5px grey;
+}
+
+.reviews-counter {
+    font-size: 13px;
+}
+
+    .reviews-counter span {
+        vertical-align: -2px;
+    }
+
+.rate {
+    float: left;
+    padding: 0 10px 0 0;
+}
+
+    .rate:not(:checked) > input {
+        position: absolute;
+        top: -9999px;
+    }
+
+    .rate:not(:checked) > label {
+        float: right;
+        width: 18px;
+        overflow: hidden;
+        white-space: nowrap;
+        cursor: pointer;
+        font-size: 21px;
+        color: #ccc;
+        margin-bottom: 0;
+        line-height: 21px;
+    }
+
+        .rate:not(:checked) > label:before {
+            content: '\2605';
+        }
+
+.content {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+    font-size: 60px;
+    color: white;
+    overflow: hidden;
+}
+
+.box p {
+    font-family: 'Forum', cursive;
+    text-align: center;
+    color: #fff;
+    font-size: 2em;
+    font-weight: bold;
+    font-variant: small-caps;
+}
+
+.box a {
+    font-size: 30px;
+    display: block;
+    text-align: center;
+    padding: 10px 10px 0px 10px;
+    text-decoration: none;
+    color: #cb0c9f;
+    cursor: pointer;
+}
+
+.overlay {
+    opacity: 0;
+}
+
+.box:hover img {
+    opacity: 0.2;
+}
+
+.box:hover .overlay {
+    opacity: 1;
+}

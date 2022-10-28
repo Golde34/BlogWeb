@@ -25,13 +25,13 @@ namespace Blog.DAO
             }
         }
 
-        public IEnumerable<Blogs> GetBlogsList()
+        public IEnumerable<Blogs> GetBlogsList(string id)
         {
             List<Blogs> Blogss;
             try
             {
                 var context = new AppDBContext();
-                Blogss = context.Blogs.Include(b => b.User).ToList();
+                Blogss = context.Blogs.Include(b => b.User).Where(b => b.UserId == id).ToList();
             }
             catch (Exception e)
             {

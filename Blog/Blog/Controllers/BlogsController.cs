@@ -8,6 +8,10 @@ using Microsoft.EntityFrameworkCore;
 using Blog.Models;
 using Blog.Repository.@interface;
 using Blog.Repository;
+using Blog.ViewDTO;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
+using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace Blog.Controllers
 {
@@ -15,6 +19,7 @@ namespace Blog.Controllers
     {
         private readonly AppDBContext _context;
         private IBlogsRepo _blogsRepo = new BlogsRepository();
+        private IUserRepo _userRepo = new UserRepository();
         public BlogsController(AppDBContext context)
         {
             _context = context;
@@ -23,14 +28,17 @@ namespace Blog.Controllers
         // GET: Blogs
         public async Task<IActionResult> Index()
         {
-            IEnumerable<Blogs> blogList = _blogsRepo.GetBlogs();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            IEnumerable<Blogs> blogList = _blogsRepo.GetBlogs(userId);
             //var appDBContext = _context.Blogs.Include(b => b.User);
+            ViewData["currentUser"] = _userRepo.GetCurrentUser(userId);
             return View(blogList);
         }
 
         // GET: Blogs/Details/5
         public IActionResult Details(int? id)
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             if (id == null || _context.Blogs == null)
             {
                 return NotFound();
@@ -43,14 +51,16 @@ namespace Blog.Controllers
             {
                 return NotFound();
             }
-
+            ViewData["currentUser"] = _userRepo.GetCurrentUser(userId);
             return View(blogs);
         }
 
         // GET: Blogs/Create
         public IActionResult Create()
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             ViewData["UserId"] = new SelectList(_context.Set<User>(), "Id", "Id");
+            ViewData["currentUser"] = _userRepo.GetCurrentUser(userId);
             return View();
         }
 
@@ -59,18 +69,40 @@ namespace Blog.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("GenreId,Title,Url,Image,Intro,Body,UserId")] Blogs blogs)
+        public async Task<IActionResult> Create([Bind("GenreId,Title,Url,Image,Intro,Body,UserId")] BlogDTO blogDTO, [FromServices] IHostingEnvironment hostingEnvironment)
         {
+            string uniqueFileName = null;
+            if (blogDTO.Image != null)
+            {
+                string uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "images");
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + blogDTO.Image.FileName;
+                using (var fs = new FileStream(Path.Combine(uploadsFolder, uniqueFileName), FileMode.Create))
+                {
+                    await blogDTO.Image.CopyToAsync(fs);
+                }
+            }
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            Blogs blogs = new Blogs
+            {
+                GenreId = blogDTO.GenreId,
+                Title = blogDTO.Title,
+                Url = blogDTO.Url,
+                Image = uniqueFileName,
+                Intro = blogDTO.Intro,
+                Body = blogDTO.Body,
+                UserId = userId,
+            };
+
             _blogsRepo.AddBlogs(blogs);
             //_context.Add(blogs);
             //await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-
         }
 
         // GET: Blogs/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             if (id == null || _context.Blogs == null)
             {
                 return NotFound();
@@ -82,6 +114,7 @@ namespace Blog.Controllers
                 return NotFound();
             }
             ViewData["UserId"] = new SelectList(_context.Set<User>(), "Id", "Id", blogs.UserId);
+            ViewData["currentUser"] = _userRepo.GetCurrentUser(userId);
             return View(blogs);
         }
 
@@ -124,6 +157,7 @@ namespace Blog.Controllers
         // GET: Blogs/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             if (id == null || _context.Blogs == null)
             {
                 return NotFound();
@@ -136,7 +170,7 @@ namespace Blog.Controllers
             {
                 return NotFound();
             }
-
+            ViewData["currentUser"] = _userRepo.GetCurrentUser(userId);
             return View(blogs);
         }
 
