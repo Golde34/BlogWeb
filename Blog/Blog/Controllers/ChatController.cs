@@ -63,7 +63,6 @@ namespace Blog.Controllers
                 Timestamp = DateTime.Now,
                 MessageType = MessageType.Notification
             };
-            _dbContext.Add(msg);
             await _dbContext.SaveChangesAsync();
             await _hubContext.Clients.Groups(id.ToString()).SendAsync("NewUserJoined", msg.Text);
             return RedirectToAction("Chat", "Home", new { id = id });
