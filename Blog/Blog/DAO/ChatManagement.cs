@@ -26,6 +26,22 @@ namespace Blog.DAO
             }
         }
 
+        public Chat GetSingleChat(int id)
+        {
+            Chat chat;
+            try
+            {
+                var _context = new AppDBContext();
+                chat = _context.Chats.Include(o => o.Users).Include(o => o.Messages).ThenInclude(o => o.User)
+                    .FirstOrDefault(o => o.Id == id);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            return chat;
+        }
+
         public List<Chat> FindRoomByName(string search)
         {
             List<Chat> chats;

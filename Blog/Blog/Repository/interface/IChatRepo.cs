@@ -9,6 +9,9 @@ namespace Blog.Repository.@interface
         void AddChat(Chat Chat);
         void UpdateChat(Chat Chat);
         void DeleteChat(Chat Chat);
+
         List<Chat> FindRoomByName(string search);
+
+        Chat GetSingleChat(int id);
     }
 }

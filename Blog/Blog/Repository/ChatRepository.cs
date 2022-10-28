@@ -17,6 +17,8 @@ namespace Blog.Repository
 
         public IEnumerable<Chat> GetChats() => ChatManagement.Instance.GetChatRooms();
 
+        public Chat GetSingleChat(int id) => ChatManagement.Instance.GetSingleChat(id);
+
         public void UpdateChat(Chat Chat)
         {
             throw new NotImplementedException();
