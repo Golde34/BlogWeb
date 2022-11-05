@@ -32,6 +32,8 @@ namespace Blog.Controllers
             IEnumerable<Blogs> blogList = _blogsRepo.GetBlogs(userId);
             //var appDBContext = _context.Blogs.Include(b => b.User);
             ViewData["currentUser"] = _userRepo.GetCurrentUser(userId);
+            List<IdentityUser> listUserBlogs = _userRepo.GetUsersbutNoCurrentUser(userId);
+            ViewData["listUserBlogs"] = listUserBlogs;
             return View(blogList);
         }
 
