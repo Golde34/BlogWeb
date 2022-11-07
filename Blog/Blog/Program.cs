@@ -20,7 +20,9 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
 })
     .AddEntityFrameworkStores<AppDBContext>()
     .AddDefaultTokenProviders();
-builder.Services.AddSignalR();  
+builder.Services.AddSignalR(e => {
+    e.MaximumReceiveMessageSize = 102400000;
+});  
  
 var app = builder.Build();
 
@@ -50,5 +52,6 @@ app.UseMvcWithDefaultRoute();
 app.UseEndpoints(routes =>
 {
     routes.MapHub<ChatHub>("/chatHub");
+    routes.MapHub<NotificationHub>("/notificationHub");
 });
 app.Run();

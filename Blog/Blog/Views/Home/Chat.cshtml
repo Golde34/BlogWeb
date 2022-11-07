@@ -407,7 +407,8 @@
                     .then(function (connectionId) {
                         _connectionId = connectionId
                         joinRoom();
-                        console.log('---------');
+                        console.log(connectionId);
+                        console.log('------- chatHub ---------');
                         $(".chat-body").animate({ scrollTop: $(".chat-body")[0].scrollHeight }, 100);
                     })
             })

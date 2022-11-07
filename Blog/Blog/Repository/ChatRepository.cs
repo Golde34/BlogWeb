@@ -21,5 +21,7 @@ namespace Blog.Repository
         {
             throw new NotImplementedException();
         }
+
+        public Chat GetPrivateChatById(int chatId) => ChatManagement.Instance.GetPrivateChatById(chatId);
     }
 }

@@ -97,5 +97,22 @@ namespace Blog.DAO
             }
             return user;
         }
+
+        internal ChatUser GetUserNotification(int chatId, string userId)
+        {
+            ChatUser user;
+            try
+            {
+                var _context = new AppDBContext();
+                user = _context.ChatUsers.Include(x => x.Chat).Include(x => x.User)
+                    .Where(x => x.ChatId == chatId)
+                    .Where(x => x.UserId != userId)
+                    .FirstOrDefault();
+            } catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            return user;
+        }
     }
 }

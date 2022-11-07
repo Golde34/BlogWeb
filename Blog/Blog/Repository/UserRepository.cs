@@ -37,5 +37,6 @@ namespace Blog.Repository
         {
             throw new NotImplementedException();
         }
+        public ChatUser GetNotificationUser(int chatId, string userId) => UserManagement.Instance.GetUserNotification(chatId, userId);
     }
 }

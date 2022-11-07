@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var notifications = (List<Notification>)ViewData["notifications"];
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -20,13 +24,12 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <div class="navbar-nav">
-                        <a href="#" class="nav-item nav-link">Profile</a>
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Private">Private Message</a>
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Messages Group</a>
                     </div>
                     <div class="navbar-nav ms-auto">
                         <span class="nav-link text-dark" style="color: #000;">Hello, @ViewData["currentUser"]</span>
-                        <a href="#" class="nav-item nav-link">Notification</a>
+                        <a href="" id="notification-btn" class="nav-item nav-link">Notification</a>
                         <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
                     </div>
                 </div>
@@ -46,9 +49,56 @@
             </footer>
         </form>
     </div>
+    <div class="modal" id="notification-modal">
+        <div class="modal-body">
+            <div data-spy="scroll">
+                    <button type="button" class="close" onclick="closeNotiModal()">X</button>
+                    <header>Notifications</header>
+                    <div>
+                        @foreach (var item in notifications)
+                        {
+                            <div class="card">
+                                <p>You got the message: @item.Content</p>
+                                <p>@item.Created</p>
+                            </div>
+                        }
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/home.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        console.log('header Notification bla bla');
+
+        var connectionNoti = new signalR.HubConnectionBuilder()
+            .withUrl("/notificationHub")
+            .build();
+        console.log('connection: ' + connectionNoti);
+
+        var _connectionId = '';
+
+        connectionNoti.start()
+            .then(function () {
+                connectionNoti.invoke("getConnectionNotiId")
+                    .then(function (connectionId) {
+                        _connectionId = connectionId
+                        console.log(connectionId);
+                        console.log('------- notiHub ---------');
+                        $(".chat-body").animate({ scrollTop: $(".chat-body")[0].scrollHeight }, 100);
+                    })
+            })
+            .catch(function (err) {
+                console.log(err)
+            });
+
+        connection.on("GetNotification", function (notification, userNoti, date) {
+            console.log('===================');
+            alert(notification);
+            console.log(userNoti);
+        });
+    </script>
 </body>
 </html>

@@ -1,6 +1,8 @@
 ﻿using Blog.Hubs;
 using Blog.Models;
 using Blog.Models.Enums;
+using Blog.Repository;
+using Blog.Repository.@interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,12 +20,17 @@ namespace Blog.Controllers
     public class ChatController : Controller
     {
         private IHubContext<ChatHub> _hubContext;
+        private IHubContext<NotificationHub> _hubNotiContext;
         private readonly ILogger<HomeController> _logger;
         private AppDBContext _dbContext;
-
-        public ChatController(IHubContext<ChatHub> hubContext, ILogger<HomeController> logger, AppDBContext dbContext)
+        private IChatRepo _chatRepo = new ChatRepository();
+        private IUserRepo _userRepo = new UserRepository();
+        private INotificationRepo _notificationRepo = new NotificationRepository();
+        public ChatController(IHubContext<ChatHub> hubContext, IHubContext<NotificationHub> hubNotiContext,
+            ILogger<HomeController> logger, AppDBContext dbContext)
         {
             _hubContext = hubContext;
+            _hubNotiContext = hubNotiContext;
             _logger = logger;
             _dbContext = dbContext;
         }
@@ -110,6 +117,23 @@ namespace Blog.Controllers
         {
             var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var user = await _userManager.FindByIdAsync(userId);
+            var chatRoom = _chatRepo.GetPrivateChatById(chatId);
+            var userNoti = _userRepo.GetNotificationUser(chatId, userId);
+            Notification notification = new Notification();
+            if (chatRoom == null)
+            {
+                notification = null;
+            } else
+            {
+                notification = new Notification()
+                {
+                    Content = user.UserName + " has text for you, " + userNoti.User.UserName,
+                    UserID = userNoti.UserId,
+                    Created = DateTime.Now,
+                    Type = NotificationType.PrivateMessage,
+                };
+            }
+
             if (image != null)
             {
                 string uniqueFileName;
@@ -129,7 +153,13 @@ namespace Blog.Controllers
                 };
                 var imagemsgDate = imagemsg.Timestamp.ToString("dd/MM/yyyy hh:mm:ss");
                 _dbContext.Messages.Add(imagemsg);
+                if (notification != null)
+                {
+                    _dbContext.Notifications.Add(notification);
+                }
                 await _dbContext.SaveChangesAsync();
+                await _hubNotiContext.Clients.Groups(roomId)
+                    .SendAsync("GetNotification", notification.Content, userNoti.User.ToString(), notification.Created.ToString());
                 await _hubContext.Clients.Groups(roomId)
                     .SendAsync("ReceiveMessage", imagemsg, user, imagemsgDate);
             }
@@ -150,9 +180,16 @@ namespace Blog.Controllers
                 };
                 var date = msg.Timestamp.ToString("dd/MM/yyyy hh:mm:ss");
                 _dbContext.Messages.Add(msg);
+                if (notification != null)
+                {
+                    _dbContext.Notifications.Add(notification);
+                }
                 await _dbContext.SaveChangesAsync();
+                await _hubNotiContext.Clients.Groups(roomId)
+                    .SendAsync("GetNotification", notification.Content, userNoti.User.ToString(), notification.Created.ToString());
                 await _hubContext.Clients.Groups(roomId)
                     .SendAsync("ReceiveMessage", msg, user, date);
+
             }
             return Ok();
         }

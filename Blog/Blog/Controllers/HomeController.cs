@@ -18,6 +18,7 @@ namespace Blog.Controllers
         private IUserRepo _userRepo = new UserRepository();
         private IChatRepo _chatRepo = new ChatRepository();
         private IMessageRepo _messageRepo = new MessageRepository();
+        private INotificationRepo _notificationRepo = new NotificationRepository();
 
         public HomeController(ILogger<HomeController> logger, AppDBContext dBContext)
         {
@@ -32,6 +33,8 @@ namespace Blog.Controllers
             //    .Where(o => o.Type == ChatType.Room)
             //    .ToList();
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var notifications = _notificationRepo.GetNotifications(userId);
+            ViewData["notifications"] = notifications;
             ViewData["currentUser"] = _userRepo.GetCurrentUser(userId);
             //ViewData["currentUser"] = _dbContext.Users.FirstOrDefault(o => o.Id == userId).UserName;
             return View(chats);
@@ -68,6 +71,8 @@ namespace Blog.Controllers
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             ViewData["currentUser"] = _userRepo.GetCurrentUser(userId);
+            var notifications = _notificationRepo.GetNotifications(userId);
+            ViewData["notifications"] = notifications;
             //ViewData["currentUser"] = _dbContext.Users.FirstOrDefault(o => o.Id == userId).UserName;
             if (chat != null)
             {
@@ -175,6 +180,7 @@ namespace Blog.Controllers
             {
                 UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value
             });
+            _userRepo.GetCurrentUser(userId);
             _dbContext.Add(chat);
             await _dbContext.SaveChangesAsync();
             return RedirectToAction("Chat", new { id = chat.Id });
@@ -187,6 +193,8 @@ namespace Blog.Controllers
             //var chats = _dbContext.Users.Where(x => x.Id != User.FindFirst(ClaimTypes.NameIdentifier).Value).ToList();
             ViewData["currentUser"] = _userRepo.GetCurrentUser(userId).UserName;
             //ViewData["currentUser"] = _dbContext.Users.FirstOrDefault(o => o.Id == userId).UserName;
+            var notifications = _notificationRepo.GetNotifications(userId);
+            ViewData["notifications"] = notifications;
             return View(chats);
         }
 

@@ -14,5 +14,6 @@ namespace Blog.Repository.@interface
 
         List<IdentityUser> GetUsersbutNoCurrentUser(string userId);
         IdentityUser GetCurrentUser(string userId);
+        ChatUser GetNotificationUser(int chatId, string userId);
     }
 }

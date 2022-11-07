@@ -72,5 +72,21 @@ namespace Blog.DAO
                 throw new Exception(e.Message);
             }
         }
+
+        public Chat GetPrivateChatById(int chatId)
+        {
+            Chat chat; ;
+            try
+            {
+                var _context = new AppDBContext();
+                chat = _context.Chats.Include(o => o.Users).ThenInclude(o => o.User)
+                    .FirstOrDefault(m => m.Id == chatId && m.Type == ChatType.Private);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            return chat;
+        }
     }
 }

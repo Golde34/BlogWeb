@@ -10,5 +10,6 @@ namespace Blog.Repository.@interface
         void UpdateChat(Chat Chat);
         void DeleteChat(Chat Chat);
         List<Chat> FindRoomByName(string search);
+        Chat GetPrivateChatById(int chatId);
     }
 }
