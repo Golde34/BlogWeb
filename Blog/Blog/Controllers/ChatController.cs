@@ -169,7 +169,6 @@ namespace Blog.Controllers
             }
             if (message.Trim().Length > 0)
             {
-
                 var msg = new Message
                 {
                     ChatID = chatId,
@@ -189,7 +188,6 @@ namespace Blog.Controllers
                     .SendAsync("GetNotification", notification.Content, userNoti.User.ToString(), notification.Created.ToString());
                 await _hubContext.Clients.Groups(roomId)
                     .SendAsync("ReceiveMessage", msg, user, date);
-
             }
             return Ok();
         }

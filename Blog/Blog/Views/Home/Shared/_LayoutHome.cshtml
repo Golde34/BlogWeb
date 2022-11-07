@@ -94,7 +94,7 @@
                 console.log(err)
             });
 
-        connection.on("GetNotification", function (notification, userNoti, date) {
+        connectionNoti.on("GetNotification", function (notification, userNoti, date) {
             console.log('===================');
             alert(notification);
             console.log(userNoti);
