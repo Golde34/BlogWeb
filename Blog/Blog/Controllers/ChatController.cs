@@ -158,8 +158,9 @@ namespace Blog.Controllers
                     _dbContext.Notifications.Add(notification);
                 }
                 await _dbContext.SaveChangesAsync();
-                await _hubNotiContext.Clients.Groups(roomId)
-                    .SendAsync("GetNotification", notification.Content, userNoti.User.ToString(), notification.Created.ToString());
+                await _hubNotiContext.Clients.All
+                    .SendAsync("GetNotification", notification.Content, userNoti.User.UserName.ToString(), 
+                    notification.Created.ToString());
                 await _hubContext.Clients.Groups(roomId)
                     .SendAsync("ReceiveMessage", imagemsg, user, imagemsgDate);
             }
@@ -184,8 +185,9 @@ namespace Blog.Controllers
                     _dbContext.Notifications.Add(notification);
                 }
                 await _dbContext.SaveChangesAsync();
-                await _hubNotiContext.Clients.Groups(roomId)
-                    .SendAsync("GetNotification", notification.Content, userNoti.User.ToString(), notification.Created.ToString());
+                await _hubContext.Clients.All
+                    .SendAsync("GetNotification", notification.Content, userNoti.User.UserName.ToString(), 
+                    notification.Created.ToString());
                 await _hubContext.Clients.Groups(roomId)
                     .SendAsync("ReceiveMessage", msg, user, date);
             }

@@ -27,5 +27,8 @@ namespace Blog.Hubs
 
             await Clients.All.SendAsync("UserJoined", json);
         }
+
+        //public async Task ReceiveMessage(string notification, string userNotification, string date, string roomId)
+        //=> await Clients.Group(roomId).SendAsync("GetNotification", notification, userNotification, date);
     }
 }

@@ -408,7 +408,7 @@
                         _connectionId = connectionId
                         joinRoom();
                         console.log(connectionId);
-                        console.log('------- chatHub ---------');
+                        console.log('--------- chatHub ---------');
                         $(".chat-body").animate({ scrollTop: $(".chat-body")[0].scrollHeight }, 100);
                     })
             })
@@ -425,11 +425,17 @@
                     console.log("Message Sent!");
                 })
                 .catch(err => {
-                    console.log("Failed to send message")
+                    console.log("Failed to send message");
                 })
             $('#chatform').trigger('reset');
             //event.preventDefault();
         }
+
+        //connection.on("GetNotification", function (data, sender, date) {
+        //    console.log('===================');
+        //    alert(data);
+        //    console.log(sender);
+        //});
 
         function rename() {
             event.preventDefault();
