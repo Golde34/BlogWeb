@@ -52,6 +52,5 @@ app.UseMvcWithDefaultRoute();
 app.UseEndpoints(routes =>
 {
     routes.MapHub<ChatHub>("/chatHub");
-    routes.MapHub<NotificationHub>("/notificationHub");
 });
 app.Run();

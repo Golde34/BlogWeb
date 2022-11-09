@@ -74,55 +74,22 @@
     <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
     <script>
-        console.log('header Notification bla bla');
-
-        var connectionNoti = new signalR.HubConnectionBuilder()
-            .withUrl("/notificationHub")
-            .build();
-        console.log('connection: ' + connectionNoti);
-
-        var _connectionId = '';
-
-        connectionNoti.start()
-            .then(function () {
-                connectionNoti.invoke("getConnectionNotiId")
-                    .then(function (connectionId) {
-                        _connectionId = connectionId
-                        console.log(connectionId);
-                        console.log('------- notiHub ---------');
-                        $(".chat-body").animate({ scrollTop: $(".chat-body")[0].scrollHeight }, 100);
-                    })
-            })
-            .catch(function (err) {
-                console.log(err)
-            });
-
-        connection.on("GetNotification", function (data, sender, date) {
-            console.log(sender);
-            console.log('===================');
+        
+        connection.on("GetNotification", function (data, sender, date, chatRoom) {
             var currentUserName = document.getElementById("currentUserNav").value;
-            console.log(currentUserName);
+            let roomUrl = "http://localhost:5015/" + chatRoom;
             if (sender != currentUserName) {
                 console.log("Sender");
             } else {
-                alert(data);
+                if (getCurrentUrl() != roomUrl) {
+                    alert(data);
+                }
             }
         });
 
-        //var form = null;
-        //function sendMessage() {
-        //    event.preventDefault();
-        //    var data = new FormData(document.getElementById("chatform"));
-        //    axios.post('/Chat/SendMessage/', data)
-        //        .then(res => {
-        //            console.log("Message Sent! But it is noti.");
-        //        })
-        //        .catch(err => {
-        //            console.log("Failed to send noti");
-        //        })
-        //    $('#chatform').trigger('reset');
-        //    //event.preventDefault();
-        //}
+        function getCurrentUrl() {
+            return window.location.href
+        }
     </script>
 </body>
 </html>

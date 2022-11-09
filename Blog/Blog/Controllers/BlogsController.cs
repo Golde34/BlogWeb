@@ -20,6 +20,7 @@ namespace Blog.Controllers
         private readonly AppDBContext _context;
         private IBlogsRepo _blogsRepo = new BlogsRepository();
         private IUserRepo _userRepo = new UserRepository();
+        private INotificationRepo _notificationRepo = new NotificationRepository();
         public BlogsController(AppDBContext context)
         {
             _context = context;
@@ -34,6 +35,8 @@ namespace Blog.Controllers
             ViewData["currentUser"] = _userRepo.GetCurrentUser(userId);
             List<IdentityUser> listUserBlogs = _userRepo.GetUsersbutNoCurrentUser(userId);
             ViewData["listUserBlogs"] = listUserBlogs;
+            var notifications = _notificationRepo.GetNotifications(userId);
+            ViewData["notifications"] = notifications;
             return View(blogList);
         }
 
@@ -53,6 +56,8 @@ namespace Blog.Controllers
             {
                 return NotFound();
             }
+            var notifications = _notificationRepo.GetNotifications(userId);
+            ViewData["notifications"] = notifications;
             ViewData["currentUser"] = _userRepo.GetCurrentUser(userId);
             return View(blogs);
         }
@@ -61,6 +66,8 @@ namespace Blog.Controllers
         public IActionResult Create()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var notifications = _notificationRepo.GetNotifications(userId);
+            ViewData["notifications"] = notifications;
             ViewData["UserId"] = new SelectList(_context.Set<User>(), "Id", "Id");
             ViewData["currentUser"] = _userRepo.GetCurrentUser(userId);
             return View();
@@ -115,6 +122,8 @@ namespace Blog.Controllers
             {
                 return NotFound();
             }
+            var notifications = _notificationRepo.GetNotifications(userId);
+            ViewData["notifications"] = notifications;
             ViewData["UserId"] = new SelectList(_context.Set<User>(), "Id", "Id", blogs.UserId);
             ViewData["currentUser"] = _userRepo.GetCurrentUser(userId);
             return View(blogs);
@@ -172,6 +181,8 @@ namespace Blog.Controllers
             {
                 return NotFound();
             }
+            var notifications = _notificationRepo.GetNotifications(userId);
+            ViewData["notifications"] = notifications;
             ViewData["currentUser"] = _userRepo.GetCurrentUser(userId);
             return View(blogs);
         }
