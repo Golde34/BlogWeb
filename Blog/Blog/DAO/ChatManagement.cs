@@ -73,6 +73,50 @@ namespace Blog.DAO
             }
         }
 
+        public void UpdateChat(Chat Chat)
+        {
+            try
+            {
+                Chat _Chat = GetChatByID(Chat.Id);
+                if (_Chat != null)
+                {
+                    var context = new AppDBContext();
+                    context.Entry<Chat>(Chat).State = EntityState.Modified;
+                    context.SaveChanges();
+                }
+                else
+                {
+                    throw new Exception("The Chat does not already exist");
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public void DeleteChat(Chat Chat)
+        {
+            try
+            {
+                Chat _Chat = GetChatByID(Chat.Id);
+                if (_Chat != null)
+                {
+                    var context = new AppDBContext();
+                    context.Chats.Remove(Chat);
+                    context.SaveChanges();
+                }
+                else
+                {
+                    throw new Exception("The Chat does not already exist");
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
         public Chat GetPrivateChatById(int chatId)
         {
             Chat chat; ;
@@ -81,6 +125,22 @@ namespace Blog.DAO
                 var _context = new AppDBContext();
                 chat = _context.Chats.Include(o => o.Users).ThenInclude(o => o.User)
                     .FirstOrDefault(m => m.Id == chatId && m.Type == ChatType.Private);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            return chat;
+        }
+
+        public Chat GetChatByID(int chatId)
+        {
+            Chat chat; ;
+            try
+            {
+                var _context = new AppDBContext();
+                chat = _context.Chats.Include(o => o.Users).ThenInclude(o => o.User)
+                    .FirstOrDefault(m => m.Id == chatId);
             }
             catch (Exception e)
             {

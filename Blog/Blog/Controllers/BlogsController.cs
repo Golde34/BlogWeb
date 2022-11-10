@@ -210,5 +210,25 @@ namespace Blog.Controllers
         {
             return _context.Blogs.Any(e => e.Id == id);
         }
+
+        public async Task<IActionResult> BlogPage(int?id)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            if (id == null || _context.Blogs == null)
+            {
+                return NotFound();
+            }
+
+            var blogs = await _context.Blogs.FindAsync(id);
+            if (blogs == null)
+            {
+                return NotFound();
+            }
+            var notifications = _notificationRepo.GetNotifications(userId);
+            ViewData["notifications"] = notifications;
+            ViewData["UserId"] = new SelectList(_context.Set<User>(), "Id", "Id", blogs.UserId);
+            ViewData["currentUser"] = _userRepo.GetCurrentUser(userId);
+            return View(blogs);
+        }
     }
 }

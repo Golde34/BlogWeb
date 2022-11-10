@@ -109,14 +109,20 @@ else
                                         <div class="row">
                                             <div class="col-md-7">
                                                 <div class="row py-3 d-flex justify-content-between">
-                                                    <h3 class="mb-0"><strong>@item.Title</strong></h3>
+                                                    <h3 class="mb-0">
+                                                        <a href="/Blogs/BlogPage/@item.Id" style="font-size:25px; color:white">
+                                                            <strong>@item.Title</strong>
+                                                        </a>
+                                                    </h3>
                                                 </div>
                                                 <div class="row">
-                                                    <p>@item.Intro</p>
+                                                    <p class="intro">@item.Intro</p>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-sm-2">
-                                                        <img class="rounded-circle" width="50" height="50" src="/images/@item.User.Avatar" />
+                                                        <a href="/Blog/BlogPage/@item.Id">
+                                                            <img class="rounded-circle" width="50" height="50" src="/images/@item.User.Avatar" />
+                                                        </a>
                                                     </div>
                                                     <div class="col-sm-10">
                                                         <p style="color:aquamarine;">@item.User.UserName</p>
@@ -128,8 +134,8 @@ else
                                                 <img class="rounded" style="width:250px; height:220px;" src="/images/@item.Image" />
                                             </div>
                                         </div>
-
                                     </div>
+                                    <br />
                                 }
                             </div>
                         </div>
@@ -152,4 +158,10 @@ else
         </div>
     </div>
 
+}
+
+@section scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="~/js/blogcard.js"></script>
 }

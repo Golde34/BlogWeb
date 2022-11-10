@@ -1,0 +1,25 @@
+﻿@model Blog.Models.Blogs
+
+@{
+    ViewData["Title"] = "Page";
+    Layout = "Shared/_LayoutHome.cshtml";
+}
+
+
+<div class="container">
+    <h1> @Model.Id</h1>
+    <h1> @Model.Title</h1>
+    <p> @Model.Created</p>
+    <div>
+        @Html.Raw(Model.Body)
+    </div>
+    
+</div>
+
+@section Scripts {
+    <script src="~/lib/Trumbowyg-main/dist/trumbowyg.min.js"></script>
+
+    <script>
+        $('#Body-Editor').trumbowyg();
+    </script>
+}

@@ -8,19 +8,13 @@ namespace Blog.Repository
     {
         public async void AddChat(Chat Chat) => await ChatManagement.Instance.AddChatRoom(Chat);
 
-        public void DeleteChat(Chat Chat)
-        {
-            throw new NotImplementedException();
-        }
+        public void DeleteChat(Chat Chat) => ChatManagement.Instance.DeleteChat(Chat);
 
         public List<Chat> FindRoomByName(string search) => ChatManagement.Instance.FindRoomByName(search);
 
         public IEnumerable<Chat> GetChats() => ChatManagement.Instance.GetChatRooms();
 
-        public void UpdateChat(Chat Chat)
-        {
-            throw new NotImplementedException();
-        }
+        public void UpdateChat(Chat Chat) => ChatManagement.Instance.UpdateChat(Chat);
 
         public Chat GetPrivateChatById(int chatId) => ChatManagement.Instance.GetPrivateChatById(chatId);
     }

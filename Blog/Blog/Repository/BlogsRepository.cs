@@ -8,18 +8,12 @@ namespace Blog.Repository
     {
         public async void AddBlogs(Blogs Blogs) => await BlogsManagement.Instance.AddBlogs(Blogs);
 
-        public void DeleteBlogs(Blogs Blogs)
-        {
-            throw new NotImplementedException();
-        }
+        public void DeleteBlogs(Blogs Blogs) => BlogsManagement.Instance.DeleteBlogs(Blogs);
 
         public Blogs GetBlogById(int? id) => BlogsManagement.Instance.GetBlogsByID(id);
 
         public IEnumerable<Blogs> GetBlogs(string userId) => BlogsManagement.Instance.GetBlogsList(userId);
 
-        public void UpdateBlogs(Blogs Blogs)
-        {
-            throw new NotImplementedException();
-        }
+        public void UpdateBlogs(Blogs Blogs) => BlogsManagement.Instance.UpdateBlogs(Blogs);
     }
 }
