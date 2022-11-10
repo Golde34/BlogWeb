@@ -31,7 +31,9 @@ namespace Blog.DAO
             try
             {
                 var context = new AppDBContext();
-                Blogss = context.Blogs.Include(b => b.User).Where(b => b.UserId == id).ToList();
+                Blogss = context.Blogs.Include(b => b.User)
+                    .Where(b => b.UserId == id)
+                    .OrderByDescending(b => b.Created).ToList();
             }
             catch (Exception e)
             {
@@ -40,7 +42,7 @@ namespace Blog.DAO
             return Blogss;
         }
 
-        public Blogs? GetBlogsByID(int? BlogsID)
+        public async Task<Blogs?> GetBlogsByID(int? BlogsID)
         {
             Blogs Blogs = null;
             try
@@ -59,7 +61,7 @@ namespace Blog.DAO
         {
             try
             {
-                Blogs _Blogs = GetBlogsByID(Blogs.Id);
+                Blogs _Blogs = await GetBlogsByID(Blogs.Id);
                 if (_Blogs == null)
                 {
                     var context = new AppDBContext();
@@ -78,16 +80,17 @@ namespace Blog.DAO
             }
         }
 
-        public void UpdateBlogs(Blogs Blogs)
+        public async Task<Blogs> UpdateBlogs(Blogs Blogs)
         {
             try
             {
-                Blogs _Blogs = GetBlogsByID(Blogs.Id);
+                Blogs _Blogs = await GetBlogsByID(Blogs.Id);
                 if (_Blogs != null)
                 {
                     var context = new AppDBContext();
                     context.Entry<Blogs>(Blogs).State = EntityState.Modified;
                     context.SaveChanges();
+                    return _Blogs;
                 }
                 else
                 {
@@ -100,16 +103,17 @@ namespace Blog.DAO
             }
         }
 
-        public void DeleteBlogs(Blogs Blogs)
+        public async Task<Blogs> DeleteBlogs(Blogs Blogs)
         {
             try
             {
-                Blogs _Blogs = GetBlogsByID(Blogs.Id);
+                Blogs _Blogs = await GetBlogsByID(Blogs.Id);
                 if (_Blogs != null)
                 {
                     var context = new AppDBContext();
                     context.Blogs.Remove(Blogs);
                     context.SaveChanges();
+                    return _Blogs;
                 }
                 else
                 {

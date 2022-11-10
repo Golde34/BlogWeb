@@ -6,13 +6,13 @@
 }
 
 <div class="container">
-
+    <br />
     <h4>Blogs</h4>
     <div class="row">
         <form asp-action="Create" asp-controller="Blogs" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="GenreId" class="control-label"></label>
+                <label asp-for="GenreId" class="control-label">What is your blog topic?  </label>
                 <select asp-for="GenreId">
                     <option value="0"> SE </option>
                     <option value="1"> AI </option>
@@ -21,24 +21,20 @@
                 </select>
                 <span asp-validation-for="GenreId" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Url" class="control-label"></label>
+                <label asp-for="Url" class="control-label">Short title</label>
                 <input asp-for="Url" class="form-control" />
                 <span asp-validation-for="Url" class="text-danger"></span>
             </div>
-            @*<div class="form-group">
-            <label asp-for="Image" class="control-label"></label>
-            <input asp-for="Image" class="form-control" />
-            <span asp-validation-for="Image" class="text-danger"></span>
-            </div>*@
             <br />
             <div class="form-group">
-                <label asp-for="Image" class="control-label"></label>
+                <label asp-for="Image" class="control-label">Head Image</label>
                 <input style="position:absolute; clip:inherit; width:max-content; height:max-content;"
                        asp-for="Image" accept="image/*" onchange="previewFile()" />
                 <img style="width:500px;" />
@@ -46,12 +42,14 @@
             <br />
             <div class="form-group">
                 <label asp-for="Intro" class="control-label"></label>
-                <input asp-for="Intro" class="form-control" />
+                <textarea class="Body-Editor" asp-for="Intro" style="height:200px;"></textarea>
+                @*<input asp-for="Intro" class="form-control" style="height:200px;"/>*@
                 <span asp-validation-for="Intro" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="Body" class="control-label">Body</label>
-                <textarea id="Body-Editor" asp-for="Body"></textarea>
+                <textarea class="Body-Editor" asp-for="Body" style="height:500px;"></textarea>
                 @*<input asp-for="Body" class="form-control" />*@
                 <span asp-validation-for="Body" class="text-danger"></span>
             </div>
@@ -61,20 +59,17 @@
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
+                <a asp-action="Index">Back to List</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
     <script src="~/lib/Trumbowyg-main/dist/trumbowyg.min.js"></script>
     
     <script>
-        $('#Body-Editor').trumbowyg();
+        $('.Body-Editor').trumbowyg();
     </script>
 }
     <script>

@@ -6,8 +6,8 @@ namespace Blog.Repository.@interface
     {
         IEnumerable<Blogs> GetBlogs(string userId);
         Task<Blogs> AddBlogs(Blogs Blogs);
-        void UpdateBlogs(Blogs Blogs);
-        void DeleteBlogs(Blogs Blogs);
-        Blogs GetBlogById(int? id);
+        Task<Blogs> UpdateBlogs(Blogs Blogs);
+        Task<Blogs> DeleteBlogs(Blogs Blogs);
+        Task<Blogs> GetBlogById(int? id);
     }
 }

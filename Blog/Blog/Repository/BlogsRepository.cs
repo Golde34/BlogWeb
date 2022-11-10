@@ -8,12 +8,12 @@ namespace Blog.Repository
     {
         public async Task<Blogs> AddBlogs(Blogs Blogs) => await BlogsManagement.Instance.AddBlogs(Blogs);
 
-        public void DeleteBlogs(Blogs Blogs) => BlogsManagement.Instance.DeleteBlogs(Blogs);
+        public async Task<Blogs> DeleteBlogs(Blogs Blogs) => await BlogsManagement.Instance.DeleteBlogs(Blogs);
 
-        public Blogs GetBlogById(int? id) => BlogsManagement.Instance.GetBlogsByID(id);
+        public async Task<Blogs> GetBlogById(int? id) => await BlogsManagement.Instance.GetBlogsByID(id);
 
         public IEnumerable<Blogs> GetBlogs(string userId) => BlogsManagement.Instance.GetBlogsList(userId);
 
-        public void UpdateBlogs(Blogs Blogs) => BlogsManagement.Instance.UpdateBlogs(Blogs);
+        public async Task<Blogs> UpdateBlogs(Blogs Blogs) => await BlogsManagement.Instance.UpdateBlogs(Blogs);
     }
 }

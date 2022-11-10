@@ -12,6 +12,7 @@ using Blog.ViewDTO;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
+using Microsoft.Extensions.Hosting.Internal;
 
 namespace Blog.Controllers
 {
@@ -41,14 +42,14 @@ namespace Blog.Controllers
         }
 
         // GET: Blogs/Details/5
-        public IActionResult Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             if (id == null || _context.Blogs == null)
             {
                 return NotFound();
             }
-            Blogs blogs = _blogsRepo.GetBlogById(id);
+            Blogs blogs = await _blogsRepo.GetBlogById(id);
             //var blogs = _context.Blogs
             //    .Include(b => b.User)
             //    .FirstOrDefaultAsync(m => m.Id == id);
@@ -78,7 +79,7 @@ namespace Blog.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("GenreId,Title,Url,Image,Intro,Body,UserId")] BlogDTO blogDTO, [FromServices] IHostingEnvironment hostingEnvironment)
+        public async Task<IActionResult> Create([Bind("Id, GenreId,Title,Url,Image,Intro,Body,UserId")] BlogDTO blogDTO, [FromServices] IHostingEnvironment hostingEnvironment)
         {
             string uniqueFileName = null;
             if (blogDTO.Image != null)
@@ -105,6 +106,8 @@ namespace Blog.Controllers
             await _blogsRepo.AddBlogs(blogs);
             //_context.Add(blogs);
             //await _context.SaveChangesAsync();
+            var notifications = _notificationRepo.GetNotifications(userId);
+            ViewData["notifications"] = notifications;
             return RedirectToAction(nameof(Index));
         }
 
@@ -134,35 +137,27 @@ namespace Blog.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,GenreId,Title,Url,Image,Intro,Body,Created,UserId")] Blogs blogs)
+        public async Task<IActionResult> Edit(int id, [Bind("Id, GenreId,Title,Url,Image,Intro,Body,UserId")] BlogDTO blogDTO)
         {
-            if (id != blogs.Id)
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            if (id != blogDTO.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(blogs);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!BlogsExists(blogs.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
+            Blogs blogs = await _blogsRepo.GetBlogById(id);
+            blogs.GenreId = blogDTO.GenreId;
+            blogs.Title = blogDTO.Title;
+            blogs.Url = blogDTO.Url;
+            blogs.Intro = blogDTO.Intro;
+            blogs.Body = blogDTO.Body;
+            blogs.UserId = userId;
+
+            await _blogsRepo.UpdateBlogs(blogs);
+            var notifications = _notificationRepo.GetNotifications(userId);
+            ViewData["notifications"] = notifications;
             ViewData["UserId"] = new SelectList(_context.Set<User>(), "Id", "Id", blogs.UserId);
-            return View(blogs);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Blogs/Delete/5
@@ -219,7 +214,7 @@ namespace Blog.Controllers
                 return NotFound();
             }
 
-            var blogs = await _context.Blogs.FindAsync(id);
+            var blogs = await _blogsRepo.GetBlogById(id);
             if (blogs == null)
             {
                 return NotFound();

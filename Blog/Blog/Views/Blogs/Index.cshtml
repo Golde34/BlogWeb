@@ -127,6 +127,12 @@ else
                                                     <div class="col-sm-10">
                                                         <p style="color:aquamarine;">@item.User.UserName</p>
                                                         <p>@item.Created</p>
+                                                        @if (@Model.First().User.UserName.ToString() == currentUser.ToString())
+                                                        {
+                                                            <p class="font-italic mb-0">
+                                                                <a asp-action="Edit" asp-route-id="@item.Id">Edit your blog</a>
+                                                            </p>
+                                                        }
                                                     </div>
                                                 </div>
                                             </div>

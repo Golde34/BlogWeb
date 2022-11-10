@@ -6,6 +6,8 @@ namespace Blog.ViewDTO
     public class BlogDTO
     {
         [Required]
+        public int Id { get; set; }
+        [Required]
         public int GenreId { get; set; }
         [Required]
         public string Title { get; set; } = "";

@@ -4,16 +4,58 @@
     ViewData["Title"] = "Page";
     Layout = "Shared/_LayoutHome.cshtml";
 }
+<style>
+    .header {
+        margin-top: 50px;
+    }
 
+    #url {
+        margin-bottom: 20px;
+    }
 
-<div class="container">
-    <h1> @Model.Id</h1>
-    <h1> @Model.Title</h1>
-    <p> @Model.Created</p>
-    <div>
-        @Html.Raw(Model.Body)
+    .head-image {
+        text-align: center;
+    }
+
+    .intro {
+        margin: 40px;
+        text-align: center;
+        font-size: 20px;
+    }
+
+    .bb-body img {
+        width: 50rem;
+        height: 30rem;
+    }
+
+</style>
+
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+        <div class="header">
+            <div id="url">
+                <i class="fa-sharp fa-solid fa-house"></i>
+                <a href="/Blogs/Index">Home</a> / <a href="/Blogs/BlogPage/@Model.Id">@Model.Url</a>
+            </div>
+            <h1> @Model.Title</h1>
+            <p> Created by @Model.User.UserName | @Model.Created</p>
+        </div>
+        <hr />
+        <div class="body-blog">
+            <div class="head-image">
+                <img style="width:50rem" src="/images/@Model.Image" />
+            </div>
+            <br />
+            <div class="intro">
+                <p>@Model.Intro</p>
+            </div>
+            <div class="bb-body">
+                @Html.Raw(Model.Body)
+            </div>
+        </div>
     </div>
-    
+    <div class="col-md-2"></div>
 </div>
 
 @section Scripts {
