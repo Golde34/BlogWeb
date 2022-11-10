@@ -6,7 +6,7 @@ namespace Blog.Repository
 {
     public class BlogsRepository : IBlogsRepo
     {
-        public async void AddBlogs(Blogs Blogs) => await BlogsManagement.Instance.AddBlogs(Blogs);
+        public async Task<Blogs> AddBlogs(Blogs Blogs) => await BlogsManagement.Instance.AddBlogs(Blogs);
 
         public void DeleteBlogs(Blogs Blogs) => BlogsManagement.Instance.DeleteBlogs(Blogs);
 

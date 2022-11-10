@@ -102,7 +102,7 @@ namespace Blog.Controllers
                 UserId = userId,
             };
 
-            _blogsRepo.AddBlogs(blogs);
+            await _blogsRepo.AddBlogs(blogs);
             //_context.Add(blogs);
             //await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
