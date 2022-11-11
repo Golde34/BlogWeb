@@ -4,6 +4,7 @@
     ViewData["Title"] = "Create";
     Layout = "Shared/_LayoutHome.cshtml";
 }
+@Html.CheckBoxFor(m => m.Status)
 
 <div class="container">
     <br />
@@ -53,10 +54,20 @@
                 @*<input asp-for="Body" class="form-control" />*@
                 <span asp-validation-for="Body" class="text-danger"></span>
             </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="Status" class="control-label">
+                    Do you want your blog to be in preview mode? In case you want to double check, the post will not be made public immediately. 
+                </label>
+                <br />
+                <input type="checkbox" asp-for="Status" /> Yes, I want preview mode.
+            </div>
+            <br />
             <div class="form-group" hidden>
                 <label asp-for="UserId" class="control-label"></label>
                 <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
             </div>
+            <br />
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
                 <a asp-action="Index">Back to List</a>

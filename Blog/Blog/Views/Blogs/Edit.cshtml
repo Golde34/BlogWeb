@@ -1,9 +1,10 @@
-﻿@model Blog.Models.Blogs
+﻿@model global::Blog.ViewDTO.BlogDTO
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Create";
     Layout = "Shared/_LayoutHome.cshtml";
 }
+@Html.CheckBoxFor(m => m.Status)
 
 <div class="container">
     <br />
@@ -43,7 +44,7 @@
             <br />
             <div class="form-group">
                 <label asp-for="Intro" class="control-label"></label>
-                <textarea class="Body-Editor" asp-for="Intro" style="height:200px;"></textarea>
+                <textarea asp-for="Intro" class="form-control" style="height:200px;width:50rem;"></textarea>
                 @*<input asp-for="Intro" class="form-control" style="height:200px;"/>*@
                 <span asp-validation-for="Intro" class="text-danger"></span>
             </div>
@@ -54,10 +55,20 @@
                 @*<input asp-for="Body" class="form-control" />*@
                 <span asp-validation-for="Body" class="text-danger"></span>
             </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="Status" class="control-label">
+                    Public this now?
+                </label>
+                <br />
+                <input type="checkbox" asp-for="Status" /> Yes, I want to public this blog.
+            </div>
+            <br />
             <div class="form-group" hidden>
                 <label asp-for="UserId" class="control-label"></label>
                 <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
             </div>
+            <br />
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
                 <a asp-action="Index">Back to List</a>
@@ -88,4 +99,3 @@
             }
         }
     </script>
-

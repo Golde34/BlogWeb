@@ -20,6 +20,9 @@ namespace Blog.ViewDTO
         [Required]
         public string Body { get; set; } = "";
         [Required]
+
+        public bool Status { get; set; }
+
         public string UserId { get; set; }
     }
 }

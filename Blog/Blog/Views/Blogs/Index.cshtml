@@ -5,6 +5,8 @@
     Layout = "Shared/_LayoutHome.cshtml";
     var currentUser = ViewData["currentUser"];
     List<IdentityUser> listUserBlogs = (List<IdentityUser>)ViewData["listUserBlogs"];
+    List<Blogs> previewBlogList = (List<Blogs>)ViewData["previewBlogList"];
+    List<Blogs> allBlogs = (List<Blogs>)ViewData["allBlogs"];
 }
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
@@ -34,7 +36,7 @@
     }
 </style>
 
-@if (Model.Count() == 0)
+@if (allBlogs.Count() == 0)
 {
     <div>
         You must Create at least 1 Blog before get your own blogsite.
@@ -56,14 +58,14 @@ else
                         <div class="profile mr-3">
                             <div class="profilepic" style="background-color: #e2c147;width: 190px;height: 190px;">
                                 <div class=" profilepic__image rounded mb-2 img-thumbnail">
-                                    <img src="/images/@Model.First().User.Avatar" style="width:190px; height:190px;" />
+                                    <img src="/images/@allBlogs.First().User.Avatar" style="width:190px; height:190px;" />
                                 </div>
                             </div>
 
                         </div>
                         <div class="media-body mb-5 text-white">
                             <h4 class="mt-0 mb-0" style="color: #ffffff; font-size:30px;">
-                                @Model.First().User.UserName
+                                @allBlogs.First().User.UserName
                             </h4>
                         </div>
                     </div>
@@ -73,7 +75,7 @@ else
                 <div class="bg-light p-4 d-flex justify-content-end text-center">
                     <ul class="list-inline mb-0">
                         <li class="list-inline-item">
-                            <h5 class="font-weight-bold mb-0 d-block">@Model.First().User.Profession</h5>
+                            <h5 class="font-weight-bold mb-0 d-block">@allBlogs.First().User.Profession</h5>
                         </li>
                     </ul>
                 </div>
@@ -86,7 +88,7 @@ else
                                 <div class="right-component p-4 rounded shadow-sm bg-light">
                                     <div class="p-4 rounded shadow-sm bg-light">
                                         <div class="py-3 d-flex justify-content-center">
-                                            <h3 class="mb-0"><strong>@Model.First().User.UserName 's Blogs</strong></h3>
+                                            <h3 class="mb-0"><strong>@allBlogs.First().User.UserName 's Blogs</strong></h3>
                                         </div>
                                         <div class="d-flex justify-content-center">
                                             <p class="text-muted">You have @Model.Count() blogs</p>
@@ -94,7 +96,7 @@ else
                                         <div class="d-flex justify-content-center">
                                             <p class="font-italic mb-0" style="font-size:larger;"><em>Live the truth, Share your creativity. </em></p>
                                         </div>
-                                        @if (@Model.First().User.UserName.ToString() == currentUser.ToString())
+                                        @if (@allBlogs.First().User.UserName.ToString() == currentUser.ToString())
                                         {
                                             <p class="font-italic mb-0">
                                                 <a asp-action="Create">Create New</a>
@@ -127,13 +129,13 @@ else
                                                     <div class="col-sm-10">
                                                         <p style="color:aquamarine;">@item.User.UserName</p>
                                                         <p>@item.Created</p>
-                                                        @if (@Model.First().User.UserName.ToString() == currentUser.ToString())
+                                                        @if (@allBlogs.First().User.UserName.ToString() == currentUser.ToString())
                                                         {
                                                             <p class="font-italic mb-0">
                                                                 <a asp-action="Edit" asp-route-id="@item.Id">Edit your blog</a>
                                                             </p>
                                                         }
-                                                        @if (@Model.First().User.UserName.ToString() == currentUser.ToString())
+                                                        @if (@allBlogs.First().User.UserName.ToString() == currentUser.ToString())
                                                         {
                                                             <p class="font-italic mb-0">
                                                                 <a asp-action="Delete" asp-route-id="@item.Id">Delete your blog</a>
@@ -151,9 +153,10 @@ else
                                 }
                             </div>
                         </div>
-                        @if (Model.Count() == 5) {
+                        @if (Model.Count() == 5)
+                        {
                             <div class="row" style="text-align:center;">
-                                <a style="color:darkcyan" href="/Blogs/IndexAll/@Model.First().User.Id">Get More</a>
+                                <a style="color:darkcyan" href="/Blogs/IndexAll/@allBlogs.First().User.Id">Get More</a>
                             </div>
                         }
                     </div>
@@ -161,10 +164,11 @@ else
             </div>
         </div>
         <div class="col-md-3 mx-auto">
-            <div class="bg-white shadow rounded overflow-hidden">
+            <div class="bg-white shadow rounded overflow-hidden ms-2">
                 <h3 style="margin:10px;">List User's Blogs</h3>
                 @foreach (var user in listUserBlogs)
                 {
+                    <div class="col-md-1"></div>
                     <div class="mb-2 pl-lg-1 col-md-8">
                         <a href="OthersBlog/@user.Id">
                             <div class="right-component p-4 rounded shadow-sm bg-light">
@@ -174,6 +178,32 @@ else
                     </div>
                 }
             </div>
+            <br />
+            @if (previewBlogList.Count > 0)
+            {
+                <div class="bg-white shadow rounded overflow-hidden ms-2">
+                    <h5 style="margin:10px;">You need to review these blogs</h5>
+                    @foreach (var blog in previewBlogList)
+                    {
+                        <div class="col-md-1"></div>
+                        <div class="mb-2 pl-lg-1 col-md-10">
+                            <a href="Edit/@blog.Id">
+                                <div class="right-component p-4 rounded shadow-sm bg-light">
+                                    <div class="row">
+                                        <h6>@blog.Title</h6>
+                                        <p>Created: @blog.Created</p>
+                                        <a asp-action="Public" asp-route-id="@blog.Id">Public it immediately</a>
+                                    </div>
+                                    <div class="row">
+                                        
+                                        <a asp-action="Delete" asp-route-id="@blog.Id">Delete your blog</a>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                </div>
+            }
         </div>
     </div>
 

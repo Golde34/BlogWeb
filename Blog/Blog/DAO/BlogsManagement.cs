@@ -1,6 +1,7 @@
 ﻿using Blog.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.Metrics;
+using Blog.Models.Enums;
 
 namespace Blog.DAO
 {
@@ -32,7 +33,7 @@ namespace Blog.DAO
             {
                 var context = new AppDBContext();
                 Blogss = context.Blogs.Include(b => b.User)
-                    .Where(b => b.UserId == id)
+                    .Where(b => b.UserId == id && b.Status == BlogStatus.Public)
                     .OrderByDescending(b => b.Created).ToList();
             }
             catch (Exception e)
@@ -49,7 +50,7 @@ namespace Blog.DAO
             {
                 var context = new AppDBContext();
                 Blogss = context.Blogs.Include(b => b.User)
-                    .Where(b => b.UserId == id)
+                    .Where(b => b.UserId == id && b.Status == BlogStatus.Public)
                     .OrderByDescending(b => b.Created).Take(5).ToList();
             }
             catch (Exception e)
@@ -141,6 +142,39 @@ namespace Blog.DAO
             {
                 throw new Exception(e.Message);
             }
+        }
+
+        public IEnumerable<Blogs> GetTop5BlogsPreview(string id)
+        {
+            List<Blogs> Blogss;
+            try
+            {
+                var context = new AppDBContext();
+                Blogss = context.Blogs.Include(b => b.User)
+                    .Where(b => b.UserId == id && b.Status == BlogStatus.Preview)
+                    .OrderByDescending(b => b.Created).Take(5).ToList();
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            return Blogss;
+        }
+
+        public IEnumerable<Blogs> GetAllBlogs(string id)
+        {
+            List<Blogs> Blogss;
+            try
+            {
+                var context = new AppDBContext();
+                Blogss = context.Blogs.Include(b => b.User)
+                    .Where(b => b.UserId == id).ToList();
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            return Blogss;
         }
     }
 }

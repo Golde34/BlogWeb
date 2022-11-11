@@ -11,5 +11,8 @@ namespace Blog.Repository.@interface
         Task<Blogs> GetBlogById(int? id);
         IEnumerable<Blogs> GetTop5Blogs(string userId);
 
+        IEnumerable<Blogs> GetTop5BlogsPreview(string userId);
+
+        IEnumerable<Blogs> GetAllBlogs(string userId);
     }
 }

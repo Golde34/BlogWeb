@@ -1,4 +1,5 @@
-﻿using Microsoft.Build.Framework;
+﻿using Blog.Models.Enums;
+using Microsoft.Build.Framework;
 
 namespace Blog.Models
 {
@@ -12,6 +13,7 @@ namespace Blog.Models
         public string Intro { get; set; }
         public string Body { get; set; }
         public DateTime Created { get; set; } = DateTime.Now;
+        public BlogStatus Status { get; set; }
         public string UserId { get; set; }
         public User User { get; set; }
     }

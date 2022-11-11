@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Blog.Models;
@@ -12,7 +8,7 @@ using Blog.ViewDTO;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
-using Microsoft.Extensions.Hosting.Internal;
+using Blog.Models.Enums;
 
 namespace Blog.Controllers
 {
@@ -36,6 +32,10 @@ namespace Blog.Controllers
             ViewData["currentUser"] = _userRepo.GetCurrentUser(userId);
             List<IdentityUser> listUserBlogs = _userRepo.GetOthersBlogUser(userId);
             ViewData["listUserBlogs"] = listUserBlogs;
+            IEnumerable<Blogs> allBlogs = _blogsRepo.GetAllBlogs(userId);
+            ViewData["allBlogs"] = allBlogs;
+            IEnumerable<Blogs> previewBlogList = _blogsRepo.GetTop5BlogsPreview(userId);
+            ViewData["previewBlogList"] = previewBlogList;
             var notifications = _notificationRepo.GetNotifications(userId);
             ViewData["notifications"] = notifications;
             return View(blogList);
@@ -79,7 +79,7 @@ namespace Blog.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id, GenreId,Title,Url,Image,Intro,Body,UserId")] BlogDTO blogDTO, [FromServices] IHostingEnvironment hostingEnvironment)
+        public async Task<IActionResult> Create([Bind("Id, GenreId,Title,Url,Image,Intro,Body,Status,UserId")] BlogDTO blogDTO, [FromServices] IHostingEnvironment hostingEnvironment)
         {
             string uniqueFileName = null;
             if (blogDTO.Image != null)
@@ -91,6 +91,7 @@ namespace Blog.Controllers
                     await blogDTO.Image.CopyToAsync(fs);
                 }
             }
+            
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             Blogs blogs = new Blogs
             {
@@ -102,6 +103,13 @@ namespace Blog.Controllers
                 Body = blogDTO.Body,
                 UserId = userId,
             };
+            if (blogDTO.Status == true)
+            {
+                blogs.Status = BlogStatus.Preview;
+            } else
+            {
+                blogs.Status = BlogStatus.Public;
+            }
 
             await _blogsRepo.AddBlogs(blogs);
             //_context.Add(blogs);
@@ -125,11 +133,22 @@ namespace Blog.Controllers
             {
                 return NotFound();
             }
+            BlogDTO blogDTO = new BlogDTO
+            {
+                Id = (int)id,
+                GenreId = blogs.GenreId,
+                Title = blogs.Title,
+                Url = blogs.Url,
+                Intro = blogs.Intro,
+                Body = blogs.Body,
+                //Status = blogs.Status == BlogStatus.Preview ? true : false,
+                UserId = userId,
+            };
             var notifications = _notificationRepo.GetNotifications(userId);
             ViewData["notifications"] = notifications;
             ViewData["UserId"] = new SelectList(_context.Set<User>(), "Id", "Id", blogs.UserId);
             ViewData["currentUser"] = _userRepo.GetCurrentUser(userId);
-            return View(blogs);
+            return View(blogDTO);
         }
 
         // POST: Blogs/Edit/5
@@ -137,7 +156,7 @@ namespace Blog.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id, GenreId,Title,Url,Image,Intro,Body,UserId")] BlogDTO blogDTO)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,GenreId,Title,Url,Image,Intro,Body,Status,UserId")] BlogDTO blogDTO)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             if (id != blogDTO.Id)
@@ -152,12 +171,20 @@ namespace Blog.Controllers
             blogs.Intro = blogDTO.Intro;
             blogs.Body = blogDTO.Body;
             blogs.UserId = userId;
+            blogs.Created = DateTime.Now;
+            if (blogDTO.Status == true)
+            {
+                blogs.Status = BlogStatus.Public;
+            } else
+            {
+                blogs.Status = BlogStatus.Preview;
+            }
 
             await _blogsRepo.UpdateBlogs(blogs);
             var notifications = _notificationRepo.GetNotifications(userId);
             ViewData["notifications"] = notifications;
             ViewData["UserId"] = new SelectList(_context.Set<User>(), "Id", "Id", blogs.UserId);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "Blogs");
         }
 
         // GET: Blogs/Delete/5
@@ -245,9 +272,25 @@ namespace Blog.Controllers
             ViewData["currentUser"] = _userRepo.GetCurrentUser(userId);
             List<IdentityUser> listUserBlogs = _userRepo.GetOthersBlogUser(userId);
             ViewData["listUserBlogs"] = listUserBlogs;
+            IEnumerable<Blogs> allBlogs = _blogsRepo.GetAllBlogs(userId);
+            ViewData["allBlogs"] = allBlogs;
+            IEnumerable<Blogs> previewBlogList = _blogsRepo.GetTop5BlogsPreview(userId);
+            ViewData["previewBlogList"] = previewBlogList;
             var notifications = _notificationRepo.GetNotifications(userId);
             ViewData["notifications"] = notifications;
             return View("Index", blogList);
+        }
+
+        public async Task<IActionResult> Public(int id)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            Blogs blogs = await _blogsRepo.GetBlogById(id);
+            blogs.Status = BlogStatus.Public;
+            await _blogsRepo.UpdateBlogs(blogs);
+            var notifications = _notificationRepo.GetNotifications(userId);
+            ViewData["notifications"] = notifications;
+            ViewData["UserId"] = new SelectList(_context.Set<User>(), "Id", "Id", blogs.UserId);
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> OthersBlog(string id)
