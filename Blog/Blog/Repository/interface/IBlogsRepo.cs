@@ -9,5 +9,7 @@ namespace Blog.Repository.@interface
         Task<Blogs> UpdateBlogs(Blogs Blogs);
         Task<Blogs> DeleteBlogs(Blogs Blogs);
         Task<Blogs> GetBlogById(int? id);
+        IEnumerable<Blogs> GetTop5Blogs(string userId);
+
     }
 }

@@ -31,10 +31,10 @@ namespace Blog.Controllers
         public async Task<IActionResult> Index()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            IEnumerable<Blogs> blogList = _blogsRepo.GetBlogs(userId);
+            IEnumerable<Blogs> blogList = _blogsRepo.GetTop5Blogs(userId);
             //var appDBContext = _context.Blogs.Include(b => b.User);
             ViewData["currentUser"] = _userRepo.GetCurrentUser(userId);
-            List<IdentityUser> listUserBlogs = _userRepo.GetUsersbutNoCurrentUser(userId);
+            List<IdentityUser> listUserBlogs = _userRepo.GetOthersBlogUser(userId);
             ViewData["listUserBlogs"] = listUserBlogs;
             var notifications = _notificationRepo.GetNotifications(userId);
             ViewData["notifications"] = notifications;
@@ -224,6 +224,56 @@ namespace Blog.Controllers
             ViewData["UserId"] = new SelectList(_context.Set<User>(), "Id", "Id", blogs.UserId);
             ViewData["currentUser"] = _userRepo.GetCurrentUser(userId);
             return View(blogs);
+        }
+
+        public async Task<IActionResult> Menu()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            IEnumerable<Blogs> blogList = _blogsRepo.GetBlogs(userId);
+            //var appDBContext = _context.Blogs.Include(b => b.User);
+            ViewData["currentUser"] = _userRepo.GetCurrentUser(userId);
+            var notifications = _notificationRepo.GetNotifications(userId);
+            ViewData["notifications"] = notifications;
+            return View(blogList);
+        }
+
+        public async Task<IActionResult> IndexAll()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            IEnumerable<Blogs> blogList = _blogsRepo.GetBlogs(userId);
+            //var appDBContext = _context.Blogs.Include(b => b.User);
+            ViewData["currentUser"] = _userRepo.GetCurrentUser(userId);
+            List<IdentityUser> listUserBlogs = _userRepo.GetOthersBlogUser(userId);
+            ViewData["listUserBlogs"] = listUserBlogs;
+            var notifications = _notificationRepo.GetNotifications(userId);
+            ViewData["notifications"] = notifications;
+            return View("Index", blogList);
+        }
+
+        public async Task<IActionResult> OthersBlog(string id)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            IEnumerable<Blogs> blogList = _blogsRepo.GetTop5Blogs(id);
+            //var appDBContext = _context.Blogs.Include(b => b.User);
+            ViewData["currentUser"] = _userRepo.GetCurrentUser(userId);
+            List<IdentityUser> listUserBlogs = _userRepo.GetOthersBlogUser(id);
+            ViewData["listUserBlogs"] = listUserBlogs;
+            var notifications = _notificationRepo.GetNotifications(userId);
+            ViewData["notifications"] = notifications;
+            return View(blogList);
+        }
+
+        public async Task<IActionResult> IndexOtherAll(string id)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            IEnumerable<Blogs> blogList = _blogsRepo.GetBlogs(id);
+            //var appDBContext = _context.Blogs.Include(b => b.User);
+            ViewData["currentUser"] = _userRepo.GetCurrentUser(userId);
+            List<IdentityUser> listUserBlogs = _userRepo.GetOthersBlogUser(id);
+            ViewData["listUserBlogs"] = listUserBlogs;
+            var notifications = _notificationRepo.GetNotifications(userId);
+            ViewData["notifications"] = notifications;
+            return View("OthersBlog", blogList);
         }
     }
 }

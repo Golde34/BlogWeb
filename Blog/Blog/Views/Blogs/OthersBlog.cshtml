@@ -45,7 +45,6 @@
 }
 else
 {
-
     <div class="row py-5 px-2">
         <div class="col-md-8 mx-5">
             <!-- Profile widget -->
@@ -89,17 +88,11 @@ else
                                             <h3 class="mb-0"><strong>@Model.First().User.UserName 's Blogs</strong></h3>
                                         </div>
                                         <div class="d-flex justify-content-center">
-                                            <p class="text-muted">You have @Model.Count() blogs</p>
+                                            <p class="text-muted">@Model.First().User.UserName have @Model.Count() blogs</p>
                                         </div>
                                         <div class="d-flex justify-content-center">
                                             <p class="font-italic mb-0" style="font-size:larger;"><em>Live the truth, Share your creativity. </em></p>
                                         </div>
-                                        @if (@Model.First().User.UserName.ToString() == currentUser.ToString())
-                                        {
-                                            <p class="font-italic mb-0">
-                                                <a asp-action="Create">Create New</a>
-                                            </p>
-                                        }
                                     </div>
                                 </div>
                                 <br /><br />
@@ -127,18 +120,6 @@ else
                                                     <div class="col-sm-10">
                                                         <p style="color:aquamarine;">@item.User.UserName</p>
                                                         <p>@item.Created</p>
-                                                        @if (@Model.First().User.UserName.ToString() == currentUser.ToString())
-                                                        {
-                                                            <p class="font-italic mb-0">
-                                                                <a asp-action="Edit" asp-route-id="@item.Id">Edit your blog</a>
-                                                            </p>
-                                                        }
-                                                        @if (@Model.First().User.UserName.ToString() == currentUser.ToString())
-                                                        {
-                                                            <p class="font-italic mb-0">
-                                                                <a asp-action="Delete" asp-route-id="@item.Id">Delete your blog</a>
-                                                            </p>
-                                                        }
                                                     </div>
                                                 </div>
                                             </div>
@@ -151,9 +132,10 @@ else
                                 }
                             </div>
                         </div>
-                        @if (Model.Count() == 5) {
+                        @if (Model.Count() == 5)
+                        {
                             <div class="row" style="text-align:center;">
-                                <a style="color:darkcyan" href="/Blogs/IndexAll/@Model.First().User.Id">Get More</a>
+                                <a style="color:cyan" href="/Blogs/IndexOtherAll/@Model.First().User.Id">Get More</a>
                             </div>
                         }
                     </div>
@@ -166,15 +148,18 @@ else
                 @foreach (var user in listUserBlogs)
                 {
                     <div class="mb-2 pl-lg-1 col-md-8">
-                        <a href="OthersBlog/@user.Id">
-                            <div class="right-component p-4 rounded shadow-sm bg-light">
-                                <h6>@user.UserName</h6>
-                            </div>
-                        </a>
+                        <div class="right-component p-4 rounded shadow-sm bg-light">
+                            <h6>@user.UserName</h6>
+                        </div>
                     </div>
                 }
             </div>
+            <br />
+            <div class="bg-white shadow rounded overflow-hidden">
+                <p style="margin:10px;"><a href="/Blogs/Index">Get back to your blogs</a></p>
+            </div>
         </div>
+            
     </div>
 
 }

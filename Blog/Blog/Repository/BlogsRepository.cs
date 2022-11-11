@@ -15,5 +15,7 @@ namespace Blog.Repository
         public IEnumerable<Blogs> GetBlogs(string userId) => BlogsManagement.Instance.GetBlogsList(userId);
 
         public async Task<Blogs> UpdateBlogs(Blogs Blogs) => await BlogsManagement.Instance.UpdateBlogs(Blogs);
+
+        public IEnumerable<Blogs> GetTop5Blogs(string userId) => BlogsManagement.Instance.GetTop5Blogs(userId);
     }
 }

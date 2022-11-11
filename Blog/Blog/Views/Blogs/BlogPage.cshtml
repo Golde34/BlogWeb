@@ -29,6 +29,7 @@
     }
 
 </style>
+<link rel="stylesheet" href="~/css/blog.css">
 
 <div class="row">
     <div class="col-md-2"></div>
@@ -48,7 +49,7 @@
             </div>
             <br />
             <div class="intro">
-                <p>@Model.Intro</p>
+                <p>@Html.Raw(Model.Intro)</p>
             </div>
             <div class="bb-body">
                 @Html.Raw(Model.Body)

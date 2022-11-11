@@ -2,7 +2,7 @@
 
 window.onload = function () {
     var intro = document.getElementsByClassName("intro");
-
+    console.log(intro.item(0).innerHTML);
     for (var i = 0; i < intro.length; i++) {
         let result = "";
         console.log("intro: " + intro.item(i).innerHTML);

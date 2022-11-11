@@ -42,6 +42,23 @@ namespace Blog.DAO
             return Blogss;
         }
 
+        public IEnumerable<Blogs> GetTop5Blogs(string id)
+        {
+            List<Blogs> Blogss;
+            try
+            {
+                var context = new AppDBContext();
+                Blogss = context.Blogs.Include(b => b.User)
+                    .Where(b => b.UserId == id)
+                    .OrderByDescending(b => b.Created).Take(5).ToList();
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            return Blogss;
+        }
+
         public async Task<Blogs?> GetBlogsByID(int? BlogsID)
         {
             Blogs Blogs = null;

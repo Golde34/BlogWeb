@@ -26,7 +26,7 @@ namespace Blog.Repository
             throw new NotImplementedException();
         }
 
-        public List<IdentityUser> GetUsersbutNoCurrentUser(string userId) => UserManagement.Instance.GetUsersButNoCurrentUser(userId);
+        //public List<IdentityUser> GetUsersButNoCurrentBlogUser(string userId, string currentUserId) => UserManagement.Instance.GetUsersButNoCurrentBlogUser(userId, currentUserId);
 
         public void UpdateUser(User User)
         {
@@ -38,5 +38,9 @@ namespace Blog.Repository
             throw new NotImplementedException();
         }
         public ChatUser GetNotificationUser(int chatId, string userId) => UserManagement.Instance.GetUserNotification(chatId, userId);
+
+        public List<IdentityUser> GetOthersBlogUser(string userId) => UserManagement.Instance.GetOthersBlogsUser(userId);
+
+        public List<IdentityUser> GetUsersbutNoCurrentUser(string userId) => UserManagement.Instance.GetUsersbutNoCurrentUser(userId);
     }
 }

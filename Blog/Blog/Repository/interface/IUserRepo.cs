@@ -11,9 +11,11 @@ namespace Blog.Repository.@interface
         void UpdateUser(User User);
         void DeleteUser(User User);
         List<IdentityUser> GetUserBySearchString(string search, string userId);
-
         List<IdentityUser> GetUsersbutNoCurrentUser(string userId);
         IdentityUser GetCurrentUser(string userId);
         ChatUser GetNotificationUser(int chatId, string userId);
+        List<IdentityUser> GetOthersBlogUser(string userId);
+
+        //List<IdentityUser> GetUsersButNoCurrentBlogUser(string userId, string currentUserId);
     }
 }
