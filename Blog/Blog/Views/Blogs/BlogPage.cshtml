@@ -34,29 +34,33 @@
 <div class="row">
     <div class="col-md-2"></div>
     <div class="col-md-8">
-        <div class="header">
-            <div id="url">
-                <i class="fa-sharp fa-solid fa-house"></i>
-                <a href="/Blogs/Index">Home</a> / <a href="/Blogs/BlogPage/@Model.Id">@Model.Url</a>
+        <div class="bg-white shadow rounded overflow-hidden">
+            <div class="container">
+                <div class="header">
+                    <div id="url">
+                        <i class="fa-sharp fa-solid fa-house"></i>
+                        <a href="/Blogs/Index">Home</a> / <a href="/Blogs/BlogPage/@Model.Id">@Model.Url</a>
+                    </div>
+                    <h1> @Model.Title</h1>
+                    <p> Created by @Model.User.UserName | @Model.Created</p>
+                </div>
+                <hr />
+                <div class="body-blog">
+                    <div class="head-image">
+                        <img style="width:50rem" src="/images/@Model.Image" />
+                    </div>
+                    <br />
+                    <div class="intro">
+                        <p>@Html.Raw(Model.Intro)</p>
+                    </div>
+                    <div class="bb-body">
+                        @Html.Raw(Model.Body)
+                    </div>
+                </div>
             </div>
-            <h1> @Model.Title</h1>
-            <p> Created by @Model.User.UserName | @Model.Created</p>
         </div>
-        <hr />
-        <div class="body-blog">
-            <div class="head-image">
-                <img style="width:50rem" src="/images/@Model.Image" />
-            </div>
-            <br />
-            <div class="intro">
-                <p>@Html.Raw(Model.Intro)</p>
-            </div>
-            <div class="bb-body">
-                @Html.Raw(Model.Body)
-            </div>
-        </div>
+        <div class="col-md-2"></div>
     </div>
-    <div class="col-md-2"></div>
 </div>
 
 @section Scripts {
@@ -65,4 +69,4 @@
     <script>
         $('#Body-Editor').trumbowyg();
     </script>
-}
+    }

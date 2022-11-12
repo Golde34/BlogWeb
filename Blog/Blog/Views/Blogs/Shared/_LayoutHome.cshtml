@@ -20,7 +20,7 @@
         <input type="hidden" id="currentUserNav" value="@User.Identity.Name" />
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
             <div class="container-fluid">
-                <a class="navbar-brand" href="/Blogs/Index">Blog</a>
+                <a class="navbar-brand" href="/Blogs/Menu">Blog</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -31,7 +31,7 @@
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Messages Group</a>
                     </div>
                     <div class="navbar-nav ms-auto">
-                        <span class="nav-link text-dark" style="color: #000;">Hello, @ViewData["currentUser"]</span>
+                        <a href="/Blogs/Index" class="nav-link text-dark" style="color: #000;">Hello, @ViewData["currentUser"]</a>
                         <a href="" id="notification-btn" class="nav-item nav-link">Notification</a>
                         <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
                     </div>

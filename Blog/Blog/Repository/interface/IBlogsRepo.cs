@@ -14,5 +14,7 @@ namespace Blog.Repository.@interface
         IEnumerable<Blogs> GetTop5BlogsPreview(string userId);
 
         IEnumerable<Blogs> GetAllBlogs(string userId);
+        IEnumerable<Blogs> GetAllPublicBlogs();
+        IEnumerable<Blogs> GetTop5LatestPublicBLogs();
     }
 }

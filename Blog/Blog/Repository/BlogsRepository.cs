@@ -19,5 +19,8 @@ namespace Blog.Repository
         public IEnumerable<Blogs> GetTop5Blogs(string userId) => BlogsManagement.Instance.GetTop5Blogs(userId);
         public IEnumerable<Blogs> GetTop5BlogsPreview(string userId) => BlogsManagement.Instance.GetTop5BlogsPreview(userId);
         public IEnumerable<Blogs> GetAllBlogs(string userId) => BlogsManagement.Instance.GetAllBlogs(userId);
+
+        public IEnumerable<Blogs> GetAllPublicBlogs() => BlogsManagement.Instance.GetAllPublicBlogs();
+        public IEnumerable<Blogs> GetTop5LatestPublicBLogs() => BlogsManagement.Instance.GetTop5LatestPublicBLogs();
     }
 }

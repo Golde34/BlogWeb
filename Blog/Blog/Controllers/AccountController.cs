@@ -55,7 +55,7 @@ namespace Blog.Controllers
                 if (result.Succeeded)
                 {
                     await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("Index", "Blogs");
+                    return RedirectToAction("Menu", "Blogs");
                 }
                 foreach (var error in result.Errors)
                 {
@@ -70,7 +70,7 @@ namespace Blog.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Blogs");
+                return RedirectToAction("Menu", "Blogs");
             }
             return View();
         }
@@ -82,7 +82,7 @@ namespace Blog.Controllers
                 var result = await _signInManager.PasswordSignInAsync(loginDTO.UserName, loginDTO.Password, loginDTO.RememberMe, false);
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Index", "Blogs");
+                    return RedirectToAction("Menu", "Blogs");
                 }
 
 

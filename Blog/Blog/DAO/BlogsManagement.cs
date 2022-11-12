@@ -163,18 +163,51 @@ namespace Blog.DAO
 
         public IEnumerable<Blogs> GetAllBlogs(string id)
         {
-            List<Blogs> Blogss;
+            List<Blogs> Blogs;
             try
             {
                 var context = new AppDBContext();
-                Blogss = context.Blogs.Include(b => b.User)
+                Blogs = context.Blogs.Include(b => b.User)
                     .Where(b => b.UserId == id).ToList();
             }
             catch (Exception e)
             {
                 throw new Exception(e.Message);
             }
-            return Blogss;
+            return Blogs;
+        }
+
+        public IEnumerable<Blogs> GetAllPublicBlogs()
+        {
+            List<Blogs> Blogs;
+            try
+            {
+                var context = new AppDBContext();
+                Blogs = context.Blogs.Include(u => u.User)
+                    .Where(b => b.Status == BlogStatus.Public)
+                    .OrderByDescending(c => c.Created).ToList();
+            } catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            return Blogs;
+        }
+
+        public IEnumerable<Blogs> GetTop5LatestPublicBLogs()
+        {
+            List<Blogs> blogs;
+            try
+            {
+                var context = new AppDBContext();
+                blogs = context.Blogs.Include(u => u.User)
+                    .Where(b => b.Status == BlogStatus.Public)
+                    .OrderByDescending(c => c.Created).Take(5)
+                    .ToList();
+            } catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            return blogs;
         }
     }
 }

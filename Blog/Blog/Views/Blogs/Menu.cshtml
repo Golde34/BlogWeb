@@ -1,1 +1,120 @@
-﻿
+﻿@model IEnumerable<Blog.Models.Blogs>
+@using Microsoft.AspNetCore.Identity;
+@{
+    ViewData["Title"] = "Index";
+    Layout = "Shared/_LayoutHome.cshtml";
+    var currentUser = ViewData["currentUser"];
+    List<Blogs> latestBlogs = (List<Blogs>)ViewData["latestBlogs"];
+}
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<!--Body resources-->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.7/css/all.css">
+<link rel="stylesheet" href="~/css/blog.css">
+<style>
+    .cover {
+        background-color: black;
+        background-image: url("/images/static/background.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        height: 230px;
+        position: relative;
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .row .first-right-comment {
+        height: 25px;
+    }
+</style>
+
+<div class="row py-5 px-2">
+    <div class="col-md-8 mx-5">
+        <!-- Profile widget -->
+        <div class="bg-white shadow rounded overflow-hidden">
+            <div class="row">
+                <div class="py-4 px-4">
+                    <div class="row">
+                        <div class="col-md-2"></div>
+                        <div class="mb-2 pl-lg-1 col-md-8">
+                            <div style="text-align:center" class="mx-auto mb-2">
+                                <h3>Menu Blog</h3>
+                            </div>
+                            <br /><br />
+                            @foreach (var item in Model)
+                            {
+                                <div class="right-component p-4 rounded shadow-sm bg-dark text-light">
+                                    <div class="row">
+                                        <div class="col-md-7">
+                                            <div class="row py-3 d-flex justify-content-between">
+                                                <h3 class="mb-0">
+                                                    <a href="/Blogs/BlogPage/@item.Id" style="font-size:25px; color:white">
+                                                        <strong>@item.Title</strong>
+                                                    </a>
+                                                </h3>
+                                            </div>
+                                            <div class="row">
+                                                <p class="intro">@item.Intro</p>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-2">
+                                                    <a href="/Blogs/BlogPage/@item.Id">
+                                                        <img class="rounded-circle" width="50" height="50" src="/images/@item.User.Avatar" />
+                                                    </a>
+                                                </div>
+                                                <div class="col-sm-10">
+                                                    <p style="color:aquamarine;">@item.User.UserName</p>
+                                                    <p>@item.Created</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <img class="rounded" style="width:250px; height:220px;" src="/images/@item.Image" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mx-auto">
+        <div class="bg-white shadow rounded overflow-hidden ms-2">
+            <h3 style="margin:10px;">Latest Blogs</h3>
+            <div class="container">
+                @foreach (var blog in latestBlogs)
+                {
+                    <div class="right-component p-4 rounded shadow-sm bg-dark">
+                        <div class="row">
+                            <div class="mb-2 pl-lg-1 col-md-8">
+                                <a href="BlogPage/@blog.Id">
+                                    <h6>@blog.Title</h6>
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <img src="~/images/@blog.Image" width="60" height="60">
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <br />
+    </div>
+</div>
+
+
+@section scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="~/js/blogcard.js"></script>
+}

@@ -256,11 +256,13 @@ namespace Blog.Controllers
         public async Task<IActionResult> Menu()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            IEnumerable<Blogs> blogList = _blogsRepo.GetBlogs(userId);
+            IEnumerable<Blogs> blogList = _blogsRepo.GetAllPublicBlogs();
             //var appDBContext = _context.Blogs.Include(b => b.User);
             ViewData["currentUser"] = _userRepo.GetCurrentUser(userId);
             var notifications = _notificationRepo.GetNotifications(userId);
             ViewData["notifications"] = notifications;
+            var top5Lateset = _blogsRepo.GetTop5LatestPublicBLogs();
+            ViewData["latestBlogs"] = top5Lateset;
             return View(blogList);
         }
 
