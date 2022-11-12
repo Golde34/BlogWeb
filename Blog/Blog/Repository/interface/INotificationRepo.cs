@@ -9,5 +9,7 @@ namespace Blog.Repository.@interface
         void UpdateNotification(Notification Notification);
         void DeleteNotification(Notification Notification);
 
+        List<Notification> ClearNotification(string userId); 
+
     }
 }

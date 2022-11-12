@@ -22,5 +22,7 @@ namespace Blog.Repository
         {
             throw new NotImplementedException();
         }
+
+        public List<Notification> ClearNotification(string userId) => NotificationManagement.Instance.ClearNotification(userId);
     }
 }

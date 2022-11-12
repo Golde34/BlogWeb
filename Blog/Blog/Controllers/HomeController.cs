@@ -198,6 +198,15 @@ namespace Blog.Controllers
             return View(chats);
         }
 
+        public IActionResult ClearNoti()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var users = _userRepo.GetUsersbutNoCurrentUser(userId);
+            _notificationRepo.ClearNotification(userId);
+            //var users = _dbContext.Users.Where(o => o.Id != userId).ToList();
+            return RedirectToAction("Index");
+        }
+
         public IActionResult Privacy()
         {
             return View();

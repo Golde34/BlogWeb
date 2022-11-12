@@ -40,18 +40,6 @@
         </nav>
     </header>
     @RenderBody()
-    <div class="modal" id="create-room-modal">
-        <form asp-controller="Home" asp-action="CreateRoom" class="modal-body">
-            <button type="button" class="close" onclick="closeModal()">X</button>
-            <header>Create Room</header>
-            <div>
-                <input name="name">
-            </div>
-            <footer>
-                <button onclick="closeModal()">Create</button>
-            </footer>
-        </form>
-    </div>
     <div class="modal" id="notification-modal">
         <div class="modal-body">
             <div data-spy="scroll">
@@ -66,6 +54,7 @@
                         </div>
                     }
                 </div>
+                <a asp-controller="Home" asp-action="ClearNoti"> Clear All</a>
             </div>
         </div>
     </div>
@@ -96,7 +85,37 @@
                 console.log("Sender");
             } else {
                 if (getCurrentUrl() != roomUrl) {
-                    alert(data);
+                    //alert nptification
+                    var div = document.createElement("div")
+                    div.classList.add("alert", "alert-primary", "alert-dismissible", "fade", "show");
+                    div.style.display = "flex";
+                    div.style.float = "right";
+                    var a = document.createElement("a");
+                    a.href = "/" + chatRoom;
+                    a.textContent = data;
+                    div.appendChild(a);
+                    var button = document.createElement("a");
+                    button.classList.add("close");
+                    button.innerHTML = "&times;";
+                    div.appendChild(button);
+                    var header = document.getElementById('myHeader');
+                    header.appendChild(div);
+                    button.addEventListener("click", function () {
+                        $('.alert').alert('close');
+                    });
+
+                    //add notification in header
+                    var hdiv = document.createElement("div");
+                    hdiv.classList.add("card");
+                    var hp = document.createElement("p");
+                    hp.innerHTML = data;
+                    var underhp = document.createElement("p");
+                    underhp.innerHTML = date;
+                    hdiv.appendChild(hp);
+                    hdiv.appendChild(underhp);
+                    var parentDiv = document.getElementById('bh-notification');
+                    parentDiv.appendChild(hdiv);
+                    console.log('ngon');
                 }
             }
         });

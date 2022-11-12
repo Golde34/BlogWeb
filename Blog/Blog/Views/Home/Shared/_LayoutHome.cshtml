@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 </head>
 <body>
-    <header>
+    <header id="myHeader">
         <input type="hidden" id="currentUserNav" value="@User.Identity.Name" />
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
             <div class="container-fluid">
@@ -53,18 +53,19 @@
     </div>
     <div class="modal" id="notification-modal">
         <div class="modal-body">
-            <div data-spy="scroll">
-                    <button type="button" class="close" onclick="closeNotiModal()">X</button>
-                    <header>Notifications</header>
-                    <div>
-                        @foreach (var item in notifications)
-                        {
-                            <div class="card">
-                                <p>You got the message: @item.Content</p>
-                                <p>@item.Created</p>
-                            </div>
-                        }
+            <div style="height:400px;">
+                <button type="button" class="close" onclick="closeNotiModal()">X</button>
+                <header>Notifications</header>
+                <div id="bh-notification" style="height:300px;overflow-y: scroll;">
+                    @foreach (var item in notifications)
+                    {
+                        <div class="card">
+                            <p>You got the message: @item.Content</p>
+                            <p>@item.Created</p>
+                        </div>
+                    }
                 </div>
+                <a asp-controller="Home" asp-action="ClearNoti"> Clear All</a>
             </div>
         </div>
     </div>
@@ -82,7 +83,37 @@
                 console.log("Sender");
             } else {
                 if (getCurrentUrl() != roomUrl) {
-                    alert(data);
+                    //alert nptification
+                    var div = document.createElement("div")
+                    div.classList.add("alert", "alert-primary", "alert-dismissible", "fade", "show");
+                    div.style.display = "flex";
+                    div.style.float = "right";
+                    var a = document.createElement("a");
+                    a.href = "/" + chatRoom;
+                    a.textContent = data;
+                    div.appendChild(a);
+                    var button = document.createElement("a");
+                    button.classList.add("close");
+                    button.innerHTML = "&times;";
+                    div.appendChild(button);
+                    var header = document.getElementById('myHeader');
+                    header.appendChild(div);
+                    button.addEventListener("click", function () {
+                        $('.alert').alert('close');
+                    });
+                    
+                    //add notification in header
+                    var hdiv = document.createElement("div");
+                    hdiv.classList.add("card");
+                    var hp = document.createElement("p");
+                    hp.innerHTML = data;
+                    var underhp = document.createElement("p");
+                    underhp.innerHTML = date;
+                    hdiv.appendChild(hp);
+                    hdiv.appendChild(underhp);
+                    var parentDiv = document.getElementById('bh-notification');
+                    parentDiv.appendChild(hdiv);
+                    console.log('ngon');
                 }
             }
         });

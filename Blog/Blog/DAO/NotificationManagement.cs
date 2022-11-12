@@ -41,5 +41,28 @@ namespace Blog.DAO
             }
             return Notifications;
         }
+
+        public List<Notification> ClearNotification(string userId)
+        {
+            List<Notification> Notifications;
+            try
+            {
+                var _context = new AppDBContext();
+                Notifications = _context.Notifications
+                    .Where(s => s.UserID == userId)
+                    .OrderByDescending(s => s.Created)
+                    .ToList();
+                foreach (var noti in Notifications)
+                {
+                    _context.Notifications.Remove(noti);
+                    _context.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            return Notifications;
+        }
     }
 }
