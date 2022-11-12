@@ -120,7 +120,8 @@ namespace Blog.DAO
             try
             {
                 var _context = new AppDBContext();
-                var blogs = _context.Blogs.Include(u => u.User).Where(u => u.UserId != userId).ToList();
+                var blogs = _context.Blogs.Include(u => u.User)
+                    .Where(u => u.UserId != userId && u.Status == BlogStatus.Public).ToList();
                 var checkArray = new List<string>();
                 foreach (var blog in blogs)
                 {
