@@ -187,7 +187,7 @@ else
                     {
                         <div class="col-md-1"></div>
                         <div class="mb-2 pl-lg-1 col-md-10">
-                            <a href="Edit/@blog.Id">
+                            <a asp-action="BlogPage" asp-route-id="@blog.Id">
                                 <div class="right-component p-4 rounded shadow-sm bg-light">
                                     <div class="row">
                                         <h6>@blog.Title</h6>
@@ -195,7 +195,7 @@ else
                                         <a asp-action="Public" asp-route-id="@blog.Id">Public it immediately</a>
                                     </div>
                                     <div class="row">
-                                        
+                                        <a asp-action="Edit" asp-route-id="@blog.Id" > Edit your blog </a>
                                         <a asp-action="Delete" asp-route-id="@blog.Id">Delete your blog</a>
                                     </div>
                                 </div>
